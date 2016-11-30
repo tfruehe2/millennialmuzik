@@ -1,0 +1,174 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+
+  {% block title_block %}
+
+  <div class="jumbotron">
+      <h2 class="text-center">{{ playlist.name }}</h2>
+  </div>
+  {% endblock %}
+
+
+
+  {% block body_block %}
+
+    <div class="embed-responsive embed-responsive-16by9">
+      <div id="player"></div>
+    </div>
+    <br/>
+    {% if playlist.created_by == user %}
+    <div class="wrapper text-center">
+    <button id="editButton" class="btn btn-warning">Edit Playlist</button>
+    <button id="saveButton" class="btn btn-success" style="display: none;">Save Changes</button>
+    <button id="undoButton" class="btn btn-default" style="display: none;">Undo Changes</button>
+    </div>
+    {% endif %}
+
+    <br/>
+
+  <ul class="panel-group" id="playlistElements">
+  {% for entry in PlaylistEntry %}
+  <li id="{{entry.song.id}}" style="list-style-type:none;">
+  <div class="panel panel-default">
+      <div class="row">
+        <div class="panel-body">
+          <div class="col-sm-3">
+          <a class="pull-left" href="#">
+            <img class="media-object img-rounded" src="/media/song_images/{{entry.song.video_id}}.jpg" style="width:200px;height:150px"></img>
+          </a>
+          </div>
+          <div class="col-sm-6">
+          <h4 class="media-heading">{{entry.song.full_name}}</h4>
+          {{ entry.song.lyrics|truncatewords_html:20|linebreaks }}
+          </div>
+          <div class="col-sm-2 col-sm-offset-1">
+            <buttons class="btn btn-danger pull-right deleteButton" style="display:none;">
+              <i class="fa fa-remove fa-lg"></i>
+            </button>
+          </div>
+        </div>
+
+  </div>
+  </div>
+  </li>
+  {% endfor %}
+</ul>
+
+
+  {% endblock %}
+
+
+  {% block script_block %}
+  <script>
+  var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          },
+        });
+
+      }
+
+      function onPlayerReady(event) {
+        player.loadPlaylist({% autoescape off %}{{video_ids}}{% endautoescape %},
+                    0,
+                    0,
+                    'large');
+        player.stopVideo();
+      }
+
+      // 5. The API calls this function when the player's state changes.
+      //    The function indicates that when playing a video (state=1),
+      //    the player should play for six seconds and then stop.
+      var done = false;
+      function onPlayerStateChange(event) {
+
+      }
+      function stopVideo() {
+        player.stopVideo();
+      }
+    </script>
+    <script>
+    var elementOrder = ''
+    var $cache
+    var deletedElements = ''
+    var updated = false
+    var data
+    $("#saveButton").click(function() {
+        data = {"playlist_id": "{{playlist.id}}",
+                    "deleted_songs" : deletedElements,
+                    "song_order": elementOrder}
+
+      if (updated) {
+        $.ajax({
+          url: "{% url "blog:edit_playlist" %}",
+          type: 'POST',
+          data: data,
+          success: function() {
+            location.reload();
+          },
+          error: function() {
+
+          },
+        });
+      }
+
+      $('#playlistElements').sortable(
+        { disabled: true }
+      )
+      $(this).toggle()
+      $('#editButton, #undoButton, .deleteButton').toggle()
+    });
+
+
+    $('#undoButton').click(function(){
+
+      $('#playlistElements')
+              .html($cache)
+              .sortable({ disabled: true });
+      $(this).toggle();
+      $('.deleteButton')
+              .hide()
+              .click(function(){
+                var $elem = $(this).closest('li')
+                deletedElements += $elem.attr('id')+','
+                $elem.remove()
+                updated = true
+              });
+
+      $('#editButton, #saveButton').toggle();
+    });
+
+    $('#editButton').click(function(){
+      $cache = $("#playlistElements").html();
+        $('#playlistElements').sortable({
+          disabled: false,
+          opacity: 0.7,
+          placeholder: 'placeholder',
+          update: function(e, ui) {
+            elementOrder = $(this).sortable('toArray').toString();
+            updated = true
+          },
+        });
+        $(this).toggle()
+        $('#saveButton, #undoButton, .deleteButton').toggle()
+      });
+
+    $('.deleteButton').click(function(){
+      var $elem = $(this).closest('li')
+      deletedElements += $elem.attr('id')+','
+      $elem.remove()
+      updated = true
+    });
+    </script>
+  {% endblock %}

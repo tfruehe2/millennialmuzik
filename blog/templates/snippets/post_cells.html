@@ -1,0 +1,5 @@
+{% if post.is_song %}
+  {% include 'snippets/music_post_cell.html' %}
+{% else %}
+  {% include 'snippets/textbased_post_cell.html' %}
+{% endif %}

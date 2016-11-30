@@ -1,0 +1,156 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% load embed_video_tags %}
+{% block body_block %}
+<div class="row">
+<div class="col-sm-8">
+<div class="panel panel-default" id="postPanel" data-id="{{ post.id }}">
+        <div class="panel-heading" id="postHeader">
+          <h2 class="panel-title">{{ post.title }}</h2>
+          <p class="text-muted">by {{ post.author }} {{ post.pub_date|timesince }} ago</p>
+        </div>
+
+        <div class="panel-body" id="postPanelBody">
+             <div class="embed-responsive embed-responsive-16by9">
+             {% if post.song.video %}
+             {% video post.song.video as my_video %}
+             {% video my_video '100% x 100%' %}
+             {% endvideo %}
+             {% else %}
+                {% if post.image %}
+                  <img src="{{ post.image }}" class="img-rounded" style="width:150px;height:150px">
+                {% else %}
+                  <img src="{% static "blog/public/images/Placeholder.png" %}" class="img-rounded" style="width:150px;height:150px">
+                {% endif %}
+             {% endif %}
+              </div>
+           </div>
+         <div class="panel-footer" id="postFooter" style="background-color:#ffffff">
+             <div class="row">
+              <div class="col-sm-4 pull-left">
+              <button class="btn btn-default like-button" data-id="{{ post.id }}">
+                <span>
+                {% if user in post.liked_by.all %}
+                <i class="fa fa-heart fa-lg"></i>
+                {% else %}
+                <i class="fa fa-heart-o fa-lg"></i>
+                {% endif %}
+                <strong>  {{ post.num_likes }}</strong></span>
+              </button>
+            </div>
+               <strong class="col-sm-2 col-sm-offset-1 text-center">Views: {{ post.views }}</strong>
+            <div class="col-sm-5">
+              {% if user == post.author %}
+              <button class="btn btn-danger pull-right" id="delete-btn" data-id="{{ post.id }}">
+              <i class="fa fa-times"> Delete</i>
+              </button>
+              {% else %}
+              <div class="btn-group pull-right">
+                <button class="btn btn-default yt-button">
+                  <a href="{{post.song.video}}" target="_blank">
+                  <i class="fa fa-youtube fa-lg"></i>
+                  </a>
+                </button>
+                <button class="btn btn-default fb-login-btn" data-url="http://test1.com:8000"+"{{ post.get_absolute_url }}">
+                  <i class="fa fa-facebook fa-lg"></i>
+                </button>
+                <button class="btn btn-default tw-login-btn">
+                  <a href="https://twitter.com/intent/tweet?url={{ post.quote_url }}&via=MillennialMuzik&text=custom%20share%20text">
+                  <i class="fa fa-twitter fa-lg"></i>
+                </a>
+                </button>
+              </div>
+              {% endif %}
+            </div>
+         </div>
+       </div>
+      </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="panel panel-default" id="lyricsPanel">
+          <div class="panel-heading" id="lyricsHeader">
+            <h1 class="panel-title text-center">Lyrics</h1>
+          </div>
+          <div class="panel-body">
+            <div class="text-center" id="lyric-box"
+              style="overflow:auto;">{{ post.description|linebreaks }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+{% include 'snippets/comment_form.html' %}
+
+{% endblock %}
+
+{% block script_block %}
+
+<script>
+var postId = $('#postPanel').attr('data-id');
+setLyricsPanelSize();
+$(document).ready(function() {
+  $(window).resize(function() {
+    setLyricsPanelSize();
+  })
+
+$("#delete-btn").click(function() {
+  var confirmed = confirm("Are you sure you want to delete this post?")
+  if (confirmed) {
+    $.ajax({
+      url: {% url "blog:delete_post" %},
+      type: "POST",
+      data: {'post_id': $(this).attr('data-id')},
+      success: function(json) {
+        window.location.href = '/'
+        alert('post was deleted')
+      },
+      error: function(error) {
+        console.log('failed to delete post');
+      }
+    });
+  }
+
+});
+
+ $('#comment-form').submit(function(e) {
+    e.preventDefault();
+    console.log($(this).serialize())
+    $.ajax({
+      url: $(this).attr('action'),
+      type: 'POST',
+      data: $(this).serialize(),
+      success: function(json) {
+        console.log(json.success)
+      },
+      error: function(error) {
+        console.log("failed to post comment")
+      },
+    });
+  });
+
+  $('#btn-comment').click(function(e) {
+    e.preventDefault();
+    $(this)
+      .closest('.panel-heading')
+      .next('.panel-body')
+      .find('#post-comment')
+      .slideToggle('normal');
+    //change button with callback to be added later
+  });
+
+});
+
+function setLyricsPanelSize() {
+  var panelBodyHeight = $("#postPanelBody").height();
+  var postPanelHeight = $("#postPanel").height();
+  var postFooterHeight = $('#postFooter').height();
+  var postHeaderHeight = $('#postHeader').height();
+  $('#lyricsHeader').height(postHeaderHeight);
+  $("#lyricsPanel").height(postPanelHeight);
+  $("#lyric-box").height(panelBodyHeight + postFooterHeight);
+}
+</script>
+
+{% endblock %}

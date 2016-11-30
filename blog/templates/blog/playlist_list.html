@@ -1,0 +1,20 @@
+<div class="wrapper text-center">
+<div class="btn-group-vertical" id="playlistButtonGroup">
+  <p id="addToPlaylistError" style="color:red;display:none">You Must Select A Playlist</p>
+{% for playlist in playlists %}
+    <a class="btn btn-default" data-playlist-id="{{playlist.id}}">{{playlist.name}}</a>
+{% endfor %}
+    <a class="btn btn-default">Extra playlist with longer name for demonstration</a>
+</div>
+</div>
+
+<script>
+  $('#playlistButtonGroup', '#playlistModal').click(function(e) {
+    e.preventDefault();
+    $(e.target)
+      .addClass('active')
+      .siblings()
+      .removeClass("active");
+  });
+
+</script>

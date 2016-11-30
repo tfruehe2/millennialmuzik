@@ -1,0 +1,149 @@
+.btn-primary {
+  background-color: #00E5FF;
+}
+
+.grape {
+  background-color: #311b92;
+}
+#img_container {
+    position:relative;
+    display:inline-block;
+    text-align:center;
+    border:1px solid red;
+}
+
+.asteriskField {
+  display: none;
+}
+
+
+.button {
+    position:absolute;
+    left: 90px;
+    top: 52px;
+    opacity: .70;
+}
+
+.placeholder {
+  list-style-type:none;
+  height: 50px;
+  background-color: #e0e0e0;
+}
+
+.button:hover {
+  opacity: .95;
+}
+
+.borderless {
+  border:none !important;
+  outline:none !important;
+}
+
+.like-button {
+  border:none !important;
+  outline:none !important;
+}
+
+.like-button .fa-heart-o {
+  color:#AAB8C2;
+}
+
+.like-button .fa-heart {
+  color:#AAB8C2;
+}
+
+.like-button:hover {
+  background-color: white;
+
+}
+
+.like-button:hover .fa-heart-o {
+  color:red;
+}
+
+.like-button:hover .fa-heart {
+  color:red;
+}
+
+.yt-button {
+  background-color: white;
+  border:none;
+  outline:none !important;
+}
+
+.btn-group-vertical .yt-button:hover {
+  border-left: #cd201f 2px solid;
+}
+
+.yt-button:hover {
+  background-color: white;
+}
+
+.yt-button .fa-youtube {
+  color:#AAB8C2;
+}
+
+.yt-button:hover .fa-youtube {
+  color:#cd201f;
+}
+
+.fb-login-btn {
+  background-color: white;
+  border:none;
+  outline:none !important;
+}
+.btn-group-vertical .fb-login-btn:hover {
+  border-left: #3B5998 2px solid;
+}
+.fb-login-btn:hover {
+  background-color: white;
+
+}
+
+.fb-login-btn .fa-facebook {
+  color:#AAB8C2;
+}
+
+.fb-login-btn:hover .fa-facebook {
+  color:#3B5998;
+}
+
+.tw-login-btn {
+  background-color: white;
+  border:none;
+  outline:none !important;
+}
+
+.btn-group-vertical .tw-login-btn:hover {
+  border-left: #4099FF 2px solid;
+}
+
+.tw-login-btn:hover {
+  background-color: white;
+}
+
+.tw-login-btn .fa-twitter {
+  color:#AAB8C2;
+}
+
+.tw-login-btn:hover .fa-twitter {
+  color:#4099FF;
+}
+
+.gp-login-btn {
+  background-color: white;
+  border:none !important;
+  outline:none !important;
+}
+
+.gp-login-btn:hover {
+  background-color: white;
+}
+
+.gp-login-btn .fa-google-plus {
+  color:#AAB8C2;
+}
+
+.gp-login-btn:hover .fa-google-plus {
+  color:#d34836;
+}

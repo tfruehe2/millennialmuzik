@@ -1,0 +1,5 @@
+<form class='form-horizontal' method="post" action="{% url 'blog:create_playlist' %}">
+  {% csrf_token %}
+  {{form.as_p}}
+<button type="submit" class="btn btn-success" id="#hiddenSubmitButton">Create Playlist</button>
+</form>

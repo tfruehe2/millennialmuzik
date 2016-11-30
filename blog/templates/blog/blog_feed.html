@@ -1,0 +1,33 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% load embed_video_tags %}
+
+  {% block title_block %}
+
+  <div class="row">
+    <div class="col-sm-12">
+    <div class ="jumbotron">
+      <h1 class="text-center">{{ title }}</h1>
+      <div class="container">
+          {% block title_content_block %}
+          {% endblock %}
+      </div>
+    </div>
+    </div>
+  </div>
+
+
+  {% endblock %}
+  {% block body_block %}
+
+    {% for post in post_list %}
+    {% include 'snippets/post_cells.html' %}
+    {% endfor %}
+
+  {% include 'snippets/pagination.html' %}
+
+  {% endblock %}
+
+  {% block script_block %}
+
+  {% endblock %}

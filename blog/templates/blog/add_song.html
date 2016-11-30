@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+
+  <body>
+    <h1>Add a Song page</h1>
+    <div>
+      <form id="post_form" method="post" action="/add_song/" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" name="submit" value="Create Page" />
+      </form>
+    </div>
+
+  </body>
+
+</html>

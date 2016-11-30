@@ -1,0 +1,75 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+
+
+{% block title_block %}
+<div class="panel panel-default">
+  <div class=panel-body>
+  <div class="media">
+  <div class="media-body">
+    <h2 class="media-heading">Welcome {{ user }}</h2>
+
+  </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block body_block %}
+{% if profile.likes.all %}
+  <div class="btn-group" id="profileBtnGroup">
+    <button class="btn btn-default mylikes-btn">
+      My Likes
+    </button>
+    <button class="btn btn-default myplaylist-btn">
+      Playlists
+    </button>
+  </div>
+  <div class="" id="myLikes">
+    <h2 class="text-center">My Likes</h2>
+    {% for post in profile.likes.all %}
+      {% include 'snippets/post_cells.html' %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+    <h2 id="myPlaylists" class="text-center">My Playlists</h2>
+    {% for playlist in profile.playlist_set.all %}
+    <div class="myPlaylists">
+      {% include 'snippets/playlist_cell.html' %}
+    </div>
+    {% endfor %}
+
+{% include 'snippets/pagination.html' %}
+{% endblock %}
+
+{% block script_block %}
+<script>
+
+$('#profileBtnGroup').click(function(e) {
+  e.preventDefault();
+  if (!$(e.target).hasClass('active')) {
+    $(e.target)
+    .addClass('active')
+    .trigger('updateProfileBody')
+    .siblings()
+    .removeClass("active");
+  }
+});
+
+$('.mylikes-btn').on('updateProfileBody', function(e){
+  console.log('triggered');
+  $('#myPlaylists').hide();
+  $('.myPlaylists').hide();
+  $("#myLikes").show();
+});
+
+$('.myplaylist-btn').on('updateProfileBody', function(e){
+  $('#myPlaylists').show();
+  $('.myPlaylists').show();
+  $("#myLikes").hide();
+});
+
+</script>
+{% endblock %}

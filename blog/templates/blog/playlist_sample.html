@@ -1,0 +1,402 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+{% block body_block %}
+<div class="row">
+<div class="col-md-8 col-sm-12">
+<div class="panel panel-default" id="postPanel" data-id="{{ post.id }}">
+        <div class="panel-heading" id="postHeader">
+          <h2 class="panel-title">{{ playlist.post.title }}</h2>
+          <p class="text-muted">by {{ playlist.post.author }} {{ playlist.post.pub_date|timesince }} ago</p>
+        </div>
+
+        <div class="panel-body" id="postPanelBody">
+             <div class="embed-responsive embed-responsive-16by9">
+                <div id="player"></div>
+              </div>
+           </div>
+         <div class="panel-footer" id="postFooter" style="background-color:#ffffff">
+             <div class="row">
+              <div class="col-sm-4 pull-left">
+              <button class="btn btn-default like-button" data-id="{{ playlist.post.id }}">
+                <span>
+                {% if user in playlist.post.liked_by.all %}
+                <i class="fa fa-heart fa-lg"></i>
+                {% else %}
+                <i class="fa fa-heart-o fa-lg"></i>
+                {% endif %}
+                <strong>  {{ playlist.post.num_likes }}</strong></span>
+              </button>
+            </div>
+               <strong class="col-sm-4 text-center">Views: {{ playlist.post.views }}</strong>
+            <div class="col-sm-4">
+              <div class="btn-group pull-right">
+                <button class="btn btn-default yt-button">
+                  <a href="{{post.song.video}}" target="_blank">
+                  <i class="fa fa-youtube fa-lg"></i>
+                  </a>
+                </button>
+                <button class="btn btn-default fb-login-btn" data-url="http://test1.com:8000"+"{{ post.get_absolute_url }}">
+                  <i class="fa fa-facebook fa-lg"></i>
+                </button>
+                <button class="btn btn-default tw-login-btn">
+                  <a href="https://twitter.com/intent/tweet?url={{ post.quote_url }}&via=MillennialMuzik&text=custom%20share%20text">
+                  <i class="fa fa-twitter fa-lg"></i>
+                </a>
+                </button>
+              </div>
+
+            </div>
+         </div>
+         {% if user == playlist.post.author %}
+         <div class="row">
+         <div class="wrapper text-center">
+           <button id="editButton" class="btn btn-warning">Edit Playlist</button>
+           <button class="btn btn-danger" id="delete-btn" data-id="{{ post.id }}">
+             <i class="fa fa-times"> Delete</i>
+           </button>
+           <button id="saveButton" class="btn btn-success" style="display: none;">Save Changes</button>
+           <button id="undoButton" class="btn btn-default" style="display: none;">Undo Changes</button>
+         </div>
+         </div>
+         {% endif %}
+       </div>
+      </div>
+      </div>
+      <div class="col-sm-12 col-md-4 ">
+        <div class="panel panel-default" id="playlistPanel">
+          <div class="panel-heading" id="playlistHeader">
+            <h1 class="panel-title text-center">Playlist</h1>
+          </div>
+          <div class="" style="overflow:auto;padding-top:10px;" id="song-list">
+          <ul class="media-list" id="playlistElements">
+            {% for entry in PlaylistEntry %}
+            <li id="{{entry.song.id}}" class="media">
+              <div class="col-sm-12 playlist-entry">
+                <a class="pull-left" href="#">
+                  <img class="media-object img-rounded" src="/media/song_images/{{entry.song.video_id}}.jpg" style="width:80px;height:60px"></img>
+                </a>
+                <div class="media-body">
+                <div class="wrapper text-center">
+                <strong class="media-heading">{{entry.song.artist}}</strong>
+                <p>{{entry.song.song_name}}</p>
+                </div>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <a class="btn btn-danger btn-sm deleteButton pull-left" style="display:none;">
+                  <i class="fa fa-remove fa-lg"></i>
+                </a>
+              </div>
+                  <div class="text-center"
+                    style="display:none;overflow:auto;">{{ entry.song.lyrics|linebreaks }}
+                  </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="panel panel-default">
+     <div class="panel-heading">
+       <div class="row">
+         <div class="col-sm-8">
+           <strong class="panel-title">Comments</strong>
+         </div>
+         <div class="col-sm-4 text-right">
+           <button class="btn btn-default btn-sm" id="btn-comment">
+           <i class="fa fa-comments-o"> Post Comment...</i></button>
+         </div>
+       </div>
+     </div>
+
+    <div class="panel-body">
+      <blockquote id="post-comment" style="display:none;">
+      {% if user.is_authenticated %}
+      <div class="row">
+        <div class="col-sm-8">
+        <form method="post" action="{% url "blog:post_comment" post_id=playlist.post.id %}" id="comment-form">
+          {% csrf_token %}
+          {% for field in comment_form %}
+          <div class="form-group">
+          {{ field }}
+          </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-success" type="button">
+            <i class="fa fa-comment"></i>Post
+          </button>
+        </form>
+      </div>
+     </div>
+
+      {% else %}
+          <div class="row">
+            <form method="post" action="/image/{{ image.uniqueId }}/comment">
+                <div class="form-group col-sm-12">
+                     <label class="col-sm-2 control-label"
+                      for="name">Name:</label>
+                     <div class="col-sm-10">
+                         <input class="form-control"
+                          type="text" name="name">
+                     </div>
+                 </div>
+                 <div class="form-group col-sm-12">
+                     <label class="col-sm-2 control-label"
+                      for="email">Email:</label>
+                     <div class="col-sm-10">
+                         <input class="form-control"
+                          type="text" name="email">
+                     </div>
+                 </div>
+                 <div class="form-group col-sm-12">
+                     <label class="col-sm-2 control-label"
+                      for="comment">Comment:</label>
+                     <div class="col-sm-10">
+                         <textarea class="form-control"
+                          name="comment" rows="2"></textarea>
+                     </div>
+                 </div>
+
+                 <div class="form-group col-sm-12">
+                     <div class="col-sm-12 text-right">
+                          <button type="submit" id="comment-btn"
+                          class="btn btn-success" type="button">
+                          <i class="fa fa-comment"></i>
+                          Post
+                         </button>
+                     </div>
+                 </div>
+               </form>
+             </div>
+
+         {% endif %}
+         </blockquote>
+         <ul class="media-list">
+           {% if playlist.post.comments %}
+           {% for comment in playlist.post.comments.all %}
+           <li class="media">
+             <div class="pull-left btn-group-vertical media-object">
+               <a class="btn btn-default borderless upvote-btn">
+                 <i class="fa fa-thumbs-o-up fa-lg"></i><strong> {{ comment.upvotes }}</strong>
+               </a>
+               <a class="btn btn-default borderless downvote-btn">
+                 <i class="fa fa-thumbs-o-down fa-lg"></i><strong> {{ comment.downvotes }}</strong>
+               </a>
+             </div>
+             <div class="media-body">
+               <strong class="media-heading">{{ comment.user }}</strong> <small class="text-muted">{{ comment.pub_date| timesince}}</small>
+               <p>{{ comment.body }}</p>
+             </div>
+           </li>
+           {% endfor %}
+           {% endif %}
+
+
+          <li class="media">
+            <div class="pull-left btn-group-vertical media-object">
+              <a class="btn btn-default borderless upvote-btn">
+                <i class="fa fa-thumbs-o-up fa-lg"></i><strong> 0</strong>
+              </a>
+              <a class="btn btn-default borderless downvote-btn">
+                <i class="fa fa-thumbs-o-down fa-lg"></i><strong> 0</strong>
+              </a>
+            </div>
+            <div class="media-body">
+              <strong class="media-heading">username</strong> <small class="text-muted">timestamp</small>
+              <p>sample comment body</p>
+            </div>
+          </li>
+          <li class="media">
+            <a class="pull-left" href="#">
+              <img class="media-object img-circle" src="http://www.gravatar.com/avatar/{{gravatar}}?d=monsterid&s=45">
+            </a>
+            <div class="media-body">
+              Sample Comment
+              <br /><strong class="media-heading">username</strong> <small class="text-muted">timestamp</small>
+            </div>
+          </li>
+        </ul>
+        </div>
+      </div>
+
+{% endblock %}
+
+{% block script_block %}
+<script>
+var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '390',
+        width: '640',
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        },
+      });
+
+    }
+
+    function onPlayerReady(event) {
+      player.loadPlaylist({% autoescape off %}{{video_ids}}{% endautoescape %},
+                  0,
+                  0,
+                  'large');
+      player.stopVideo();
+    }
+
+    // 5. The API calls this function when the player's state changes.
+    //    The function indicates that when playing a video (state=1),
+    //    the player should play for six seconds and then stop.
+    var done = false;
+    function onPlayerStateChange(event) {
+
+    }
+    function stopVideo() {
+      player.stopVideo();
+    }
+  </script>
+
+  <script>
+  setLyricsPanelSize();
+  $(document).ready(function() {
+    $(window).resize(function() {
+        setLyricsPanelSize();
+    });
+    var elementOrder = ''
+    var $cache
+    var deletedElements = ''
+    var updated = false
+    var data
+
+    $("#saveButton").click(function() {
+        data = {"playlist_id": "{{playlist.id}}",
+                    "deleted_songs" : deletedElements,
+                    "song_order": elementOrder}
+      if (updated) {
+        $.ajax({
+          url: "{% url "blog:edit_playlist" %}",
+          type: 'POST',
+          data: data,
+          success: function() {
+            location.reload();
+          },
+          error: function() {
+          },
+        });
+      }
+
+      $('#playlistElements').sortable(
+        { disabled: true }
+      )
+      $(this).toggle()
+      $('.playlist-entry').toggleClass('col-sm-12 col-sm-10')
+      $('#editButton, #undoButton, #delete-btn, .deleteButton').toggle()
+    });
+
+
+    $('#undoButton').click(function(){
+      $('#playlistElements')
+              .html($cache)
+              .sortable({ disabled: true });
+      $(this).toggle();
+      $('.deleteButton')
+              .hide()
+              .click(function(){
+                var $elem = $(this).closest('li')
+                deletedElements += $elem.attr('id')+','
+                $elem.remove()
+                updated = true
+              });
+      $('#editButton, #delete-btn, #saveButton').toggle();
+    });
+
+    $('#editButton').click(function(){
+      $cache = $("#playlistElements").html();
+      $('.playlist-entry').toggleClass('col-sm-12 col-sm-10')
+        $('#playlistElements').sortable({
+          disabled: false,
+          opacity: 0.7,
+          placeholder: 'placeholder',
+          update: function(e, ui) {
+            elementOrder = $(this).sortable('toArray').toString();
+            updated = true
+          },
+        });
+        $(this).toggle()
+        $('#saveButton, #undoButton, #delete-btn, .deleteButton').toggle()
+      });
+
+    $("#delete-btn").click(function() {
+      var confirmed = confirm("Are you sure you want to delete this post?")
+      if (confirmed) {
+        $.ajax({
+          url: {% url "blog:delete_post" %},
+          type: "POST",
+          data: {'post_id': $(this).attr('data-id')},
+          success: function(json) {
+            window.location.href = '/'
+            alert('post was deleted')
+          },
+          error: function(error) {
+            console.log('failed to delete post');
+          }
+        });
+      }
+    });
+
+    $('.deleteButton').click(function(){
+      var $elem = $(this).closest('li')
+      deletedElements += $elem.attr('id')+','
+      $elem.remove()
+      updated = true
+    });
+    $('#comment-form').submit(function(e) {
+       e.preventDefault();
+       console.log($(this).serialize())
+       $.ajax({
+         url: $(this).attr('action'),
+         type: 'POST',
+         data: $(this).serialize(),
+         success: function(json) {
+           console.log(json.success)
+         },
+         error: function(error) {
+           console.log("failed to post comment")
+         },
+       });
+     });
+
+     $('#btn-comment').click(function(e) {
+       e.preventDefault();
+       $(this)
+         .closest('.panel-heading')
+         .next('.panel-body')
+         .find('#post-comment')
+         .slideToggle('normal');
+       //change button with callback to be added later
+     });
+
+  });
+
+
+  function setLyricsPanelSize() {
+    var panelBodyHeight = $("#postPanelBody").height();
+    var postPanelHeight = $("#postPanel").height();
+    var postFooterHeight = $('#postFooter').height();
+    var postHeaderHeight = $('#postHeader').height();
+    $('#playlistHeader').height(postHeaderHeight);
+    $("#playlistPanel").height(postPanelHeight);
+    $("#song-list").height(panelBodyHeight + postFooterHeight);
+  }
+
+  </script>
+
+{% endblock %}

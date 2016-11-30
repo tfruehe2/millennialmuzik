@@ -1,0 +1,21 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+  <h2>Search Results</h2>
+{% endblock %}
+
+{% block body_block %}
+{% if search_results %}
+  {% for post in search_results %}
+  {% if post.is_song %}
+    {% include 'snippets/music_post_cell.html' %}
+  {% else %}
+    {% include 'snippets/textbased_post_cell.html' %}
+  {% endif %}
+  {% endfor %}
+    {% include 'snippets/pagination.html' %}
+{% else %}
+<p>No Search Results Found</p>
+{% endif %}
+{% endblock %}

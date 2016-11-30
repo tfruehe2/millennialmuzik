@@ -1,0 +1,76 @@
+<!-- Login Dropdown
+
+<li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">Signup / Login</a>
+  <div class="dropdown-menu">
+    <h1>Login</h1>
+      <form id="login_form" method="post" action="/login/">
+        {% csrf_token %}
+        Username: <input type="text" name="username" value="" size="50" />
+        <br />
+        Password: <input type="text" name="password" value="" size="50" />
+        <br />
+        <input type="submit" value="submit" />
+      </form>
+    <p>
+      Not a member?
+      <a href="{% url 'registration_register' %}">Register</a>
+    </p>
+    <div class="container-fluid">
+      <a class="small" href="#">Forgot password?</a>
+   </div>
+ </div>
+</li>
+-->
+
+<li><a class="nav-link" href="{% url 'blog:about' %}">About</a></li>
+<li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">Blogs<span class="caret"></span></a>
+ <ul class="dropdown-menu">
+   {% for blog in blog_list %}
+   <li><a href="/blog/{{ blog.slug }}">{{ blog.title }}</a></li>
+   <li class="divider"></li>
+   {% endfor %}
+
+ </ul>
+</li>
+
+<form id="playlistForm">
+  <div class="form-group">
+    <label for="playlistName">Playlist</label>
+    <input type="text" class="form-control" id="playlistName" placeholder="playlist name...">
+  </div>
+  <div class="form-group">
+    <label for="playlistDescription">Description</label>
+    <textarea class="form-control" id="playlistDescription" placeholder="my favorite [insert genre] songs..." row="4"></textarea>
+  </div>
+  <div class="form-group">Playlist will be&nbsp;
+    <label class="radio-inline">
+      <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="False" checked="checked">Public
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="True">Private
+    </label>
+  </div>
+</form>
+
+
+{% if post.song.video %}
+{% video post.song.video as my_video %}
+<img src="{{ my_video.thumbnail }}" class="img-rounded" style="width:200px;height:150px">
+{% endvideo %}
+{% else %}
+<img src="{% static "blog/public/images/Placeholder.png" %}" class="img-rounded" style="width:150px;height:150px">
+{% endif %}
+
+
+
+var $tag = $('<script>'', {
+    src: "https://www.youtube.com/iframe_api",
+    }).prependTo('body');
+    console.log('got here');
+});
+
+
+<button type="submit" id="comment-btn" class="btn btn-success" type="button" data-id="{{ post.id }}">
+  <i class="fa fa-comment"></i>Post
+</button>
+</form>

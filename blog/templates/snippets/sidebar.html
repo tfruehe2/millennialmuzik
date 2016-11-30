@@ -1,0 +1,66 @@
+<div id="sidebar-wrapper">
+      <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
+
+          {% if user.is_authenticated %}
+          <li>
+            <a href="/profile/{{ user.pk }}">
+              <span class="fa-stack fa-lg pull-left">
+                <i class="fa fa-user-circle-o fa-stack-1x"></i>
+              </span>My Profile</a>
+          </li>
+          {% endif %}
+
+          <li>
+             <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-music fa-stack-1x "></i></span>Music</a>
+                <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                 <li><a href="{% url 'blog:PopularMusic' %}">Popular</a></li>
+                 <li><a href="{% url 'blog:MusicByGenre' %}">By Genre</a></li>
+                 <li><a href="{% url 'blog:TrendingMusic' %}">Trending</a></li>
+                 <li><a href="#">Random Song</a></li>
+             </ul>
+         </li>
+         <li>
+             <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-newspaper-o fa-stack-1x "></i></span>Articles</a>
+             <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+                 <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>News</a></li>
+                 <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Pop. Culture</a></li>
+                 <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Music Reviews</a></li>
+
+             </ul>
+         </li>
+         <li>
+           <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-users fa-stack-1x "></i></span>Community</a>
+           <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+               <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Forums</a></li>
+               <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Submit Music</a></li>
+           </ul>
+         </li>
+         <li>
+             <a href="{% url "blog:playlist_feed" %}"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-youtube-play fa-stack-1x "></i></span>Playlists</a>
+         </li>
+         <li>
+             <a href="{% url 'blog:about' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span>About</a>
+         </li>
+         <div class="row">
+           <div class="col-sm-12">
+           <br/>
+           <span class="text-center"><h4>Connect</h4></span>
+           <br/>
+           <div class="wrapper text-center">
+           <div class="row">
+               <a href="https://twitter.com/MillennialMuzik" class="twitter-follow-button"
+                data-size="large" data-show-screen-name="false" data-show-count="false">
+                Follow @MillennialMuzik
+              </a>
+          </div>
+          <div class="row">
+             <div class="fb-follow" data-href="https://www.facebook.com/MillennialMuzik"
+              data-layout="button" data-size="large" data-show-faces="false">
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      </ul>
+
+</div>

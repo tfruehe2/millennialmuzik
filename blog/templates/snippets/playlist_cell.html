@@ -1,0 +1,57 @@
+{% load staticfiles %}
+
+
+<div class="row">
+<div class="col-sm-12">
+  <div class="panel panel-default post-container">
+    <div>
+      <div class="panel-header text-center">
+
+        <a href="{% url 'blog:playlist' pk=playlist.id %}" style="color:#212121;"><h4>{{ playlist.name }}</h4></a>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+      <div class="panel-body">
+
+        {% if playlist.image %}
+          <img src="/media/{{ post.image }}" class="img-rounded" id="img-container" style="width:200px;height:150px" />
+        {% else %}
+          <img src="{% static "blog/public/images/Placeholder.png" %}" class="img-rounded" style="width:150px;height:150px" />
+        {% endif %}
+
+
+      </div>
+      </div>
+      <div class="col-sm-6">
+
+      <div class="panel-body text-center">{{ playlist.description|truncatewords_html:40|linebreaks }}</div>
+      </div>
+      <div class="col-sm-3">
+        <div class="btn-group-vertical pull-right">
+            <button class="btn btn-default like-button" data-id="{{ post.id }}">
+            {% if user.userprofile in playlist.post.liked_by.all %}
+              <i class="fa fa-heart fa-2x"></i>
+            {% else %}
+              <i class="fa fa-heart-o fa-2x"></i>
+            {% endif %}
+            </button>
+            <button class="btn btn-default fb-login-btn" data-url="http://test1.com:8000"+"{{ post.get_absolute_url }}">
+              <i class="fa fa-facebook fa-2x"></i>
+            </button>
+            <button class="btn btn-default tw-login-btn">
+              <a href="https://twitter.com/intent/tweet?url={{ post.quote_url }}&via=MillennialMuzik&text=custom%20share%20text">
+              <i class="fa fa-twitter fa-2x"></i>
+            </a>
+            </button>
+        </div>
+    </div>
+    </div>
+    <div class="panel-footer" style="background-color:#ffffff;">
+      <span class="views text-right">
+        <strong>created by: {{ playlist.created_by }}</strong> | <strong> {{playlist.pub_date}}</strong></span>
+    </div>
+  </div>
+  </div>
+</div>

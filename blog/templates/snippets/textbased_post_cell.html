@@ -1,0 +1,63 @@
+{% load staticfiles %}
+
+
+<div class="row">
+<div class="col-sm-12">
+  <div class="panel panel-default post-container">
+    <div>
+      <div class="panel-header text-center">
+        {% if post.is_playlist %}
+        <a href="{% url 'blog:playlist' pk=post.playlist.id %}" style="color:#212121;"><h4>{{ post.title }}</h4></a>
+        {% else %}
+        <a href="{% url 'blog:BlogPost' slug=post.feed.slug pk=post.id %}" style="color:#212121;"><h4>{{ post.title }}</h4></a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+      <div class="panel-body">
+
+        {% if post.image %}
+          <img src="/media/{{ post.image }}" class="img-rounded" id="img-container" style="width:200px;height:150px" />
+        {% else %}
+          <img src="{% static "blog/public/images/Placeholder.png" %}" class="img-rounded" style="width:150px;height:150px" />
+        {% endif %}
+
+
+      </div>
+      </div>
+      <div class="col-sm-6">
+
+      <div class="panel-body text-center">{{ post.description|truncatewords_html:40|linebreaks }}</div>
+      </div>
+      <div class="col-sm-3">
+        <div class="btn-group-vertical pull-right">
+            <button class="btn btn-default like-button" data-id="{{ post.id }}">
+            {% if user.userprofile in post.liked_by.all %}
+              <i class="fa fa-heart fa-2x"></i>
+            {% else %}
+              <i class="fa fa-heart-o fa-2x"></i>
+            {% endif %}
+            </button>
+            <button class="btn btn-default fb-login-btn" data-url="http://test1.com:8000"+"{{ post.get_absolute_url }}">
+              <i class="fa fa-facebook fa-2x"></i>
+            </button>
+            <button class="btn btn-default tw-login-btn">
+              <a href="https://twitter.com/intent/tweet?url={{ post.quote_url }}&via=MillennialMuzik&text=custom%20share%20text">
+              <i class="fa fa-twitter fa-2x"></i>
+            </a>
+            </button>
+        </div>
+    </div>
+    </div>
+    <div class="panel-footer" style="background-color:#ffffff;">
+      <span class="views text-right">
+        {% if post.is_playlist %}
+        <strong>created by: {{ post.author }}</strong> | <strong> {{post.pub_date}}</strong></span>
+        {% else %}
+        <strong>written by: {{ post.author }}</strong> | <strong> {{post.pub_date}}</strong></span>
+        {% endif %}
+    </div>
+  </div>
+  </div>
+</div>

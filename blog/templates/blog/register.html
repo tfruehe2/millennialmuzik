@@ -1,0 +1,38 @@
+{% extends 'blog/base.html' %}
+{% load staticfiles %}
+
+
+
+{% block title_block %}
+
+{% endblock %}
+
+{% block body_block %}
+
+  {% if registered %}
+    <strong>thank you for registering!</stong>
+      <a href="/">Return to the homepage</a>< br />
+  {% else %}
+  <div class="wrapper text-center">
+    <strong>Register with</strong>
+    {% include 'snippets/login_buttons.html' %}
+    <strong>or with email</strong>
+    <div class="row">
+    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+    <form class="form-horizontal" method="post" action="{% url "blog:register" %}">
+      {% csrf_token %}
+      {% for field in user_form %}
+      <div class="form-group">
+      {{ field }}
+      </div>
+      {% endfor %}
+      <span>
+      <a href="{% url "blog:login" %}">Sign In?</a>
+      <button type="submit" class="btn btn-default pull-right">Sign Up</button>
+    </span>
+    </form>
+  </div>
+  </div>
+  </div>
+  {% endif %}
+{% endblock %}

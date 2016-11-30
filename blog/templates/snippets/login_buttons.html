@@ -1,0 +1,12 @@
+
+<div class="row">
+    <a class="btn btn-default borderless fb-login-btn" href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">
+      <i class="fa fa-facebook fa-2x"></i>
+    </a>
+    <a class="btn btn-default borderless tw-login-btn" href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
+      <i class="fa fa-twitter fa-2x"></i>
+    </a>
+    <a class="btn btn-default borderless gp-login-btn" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">
+      <i class="fa fa-google-plus fa-2x" style="width:35px"></i>
+    </a>
+</div>

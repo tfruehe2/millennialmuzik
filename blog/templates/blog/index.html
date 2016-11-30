@@ -1,0 +1,25 @@
+{% extends 'blog/base.html'%}
+{% load staticfiles %}
+
+  {% block title_block %}
+  <div class="row">
+    <div class="col-sm-12">
+      <h1 class="page-header text-center">Latest Posts</h1>
+      <div class="container">
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  {% block body_block %}
+          {% if feed_list %}
+
+            {% for post in feed_list %}
+            {% include 'snippets/post_cells.html' %}
+            {% endfor %}
+
+            {% else %}
+            <p>No blogs are available</p>
+          {% endif %}
+      {% include 'snippets/pagination.html' %}
+  {% endblock %}
