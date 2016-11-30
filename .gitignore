@@ -1,0 +1,13 @@
+# databases #
+#############
+*.sqlite3
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+__pycache__
+
+# private files #
+#################
+secrets.py

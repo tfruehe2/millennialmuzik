@@ -266,8 +266,9 @@ def retrieve_thumbnail(vid_id):
 def fetch_lyrics(song_title, artist_name):
     import requests
     from bs4 import BeautifulSoup
+    from secrets import GENIUS_AUTH_TOKEN
 
-    headers = {'Authorization': 'Bearer oQxw_crdEeOziZKD-58YPFCgm3eNxXGmXLlJrJh_DSS616jiO13NmUeYVz9sXPqO'}
+    headers = {'Authorization': GENIUS_AUTH_TOKEN}
 
     base_url = "http://api.genius.com"
     search_url = base_url + "/search"
