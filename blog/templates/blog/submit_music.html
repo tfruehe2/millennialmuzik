@@ -1,0 +1,24 @@
+{% extends 'blog/base.html' %}
+
+{% block title_block %}
+<div class="row">
+  <div class="col-sm-12">
+    <h1 class="page-header text-center">Recommend A Song</h1>
+    <div class="container">
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block body_block %}
+
+<form role="form" action="{% url "blog:submit_music" %}" method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      {{ field.label_tag }} {{ field }}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+{% endblock %}

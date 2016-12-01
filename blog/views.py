@@ -6,14 +6,13 @@ from django.db.models import DateField
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from .models import Feed, Post, UserProfile, Song, Like, Comment, Tag, Playlist, PlaylistEntry
-from .forms import FeedForm, PostForm, UserProfileForm, CommentForm, SongForm, PlaylistForm
+from .forms import FeedForm, PostForm, UserProfileForm, CommentForm, SongForm, PlaylistForm, SuggestionsForm, SubmitMusicForm
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import ModelFormMixin, CreateView
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from crispy_forms.utils import render_crispy_form
 from functools import reduce
 from datetime import datetime
 
@@ -138,34 +137,28 @@ def edit_playlist(request):
         return render(request, 'blog/playlist.html', context)
 
 @login_required
-def create_playlist(request):
+def create_playlist(request, **kwargs):
+
     if request.method == 'POST':
-        user = request.user
-        name = request.POST.get('name')
-        description = request.POST.get('description')
-        is_private = request.POST.get('is_private').capitalize()
-        song = request.POST.get('song_id')
-        tag = Tag.objects.filter(name="PLLST")
-        if name and description and song:
-            try:
-                playlist = Playlist.objects.create(created_by=user, name=str(name), description=str(description),
-                                    is_private=is_private)
-                playlist.tags = tag
-                playlist.save()
-                PlaylistEntry.objects.create(song=Song.objects.get(pk=song), playlist=playlist)
-                return HttpResponse(
-                        json.dumps({"success":"success"}),
-                        content_type="application/json"
-                )
-            except:
-                raise
+        form = PlaylistForm(request.POST)
+
+        if form.is_valid():
+            form.instance.created_by = request.user
+            if 'image' in request.FILES:
+                print("got here")
+                form.instance.image = request.FILES['image']
+            playlist = form.save()
+            playlist.tags = Tag.objects.filter(name="PLLST")
+            PlaylistEntry.objects.create(song=Song.objects.get(pk=kwargs['song_id']), playlist=playlist)
+            playlist.save()
+
+            return HttpResponseRedirect('/')
         else:
-            print('missing info')
-            response_object = {"error":"error", "name": name, "description": description}
-            return HttpResponse(
-                json.dumps(response_object),
-                content_type="application/json"
-            )
+            song = Song.objects.get(pk=kwargs['song_id'])
+            song_name = song.full_name
+            song_id = song.pk
+            feed_list = Post.objects.filter(is_private=False).order_by('-pub_date', 'title')
+            return render(request, 'snippets/laziness.html', {'playlist_form': form, "song_name":song_name, "song_id":song_id, "feed_list":feed_list })
 
 
 class index(ListView):
@@ -336,6 +329,22 @@ def fetch_user_playlists(request, **kwargs):
         html = render_to_string('blog/playlist_list.html', context)
         return HttpResponse(html)
 
+def suggestions(request):
+    if request.method == "GET":
+        form = SuggestionsForm()
+        return render(request, 'blog/suggestions.html', {'form': form})
+    if request.method == "POST":
+        form = SuggestionsForm(request.POST)
+        return HttpResponseRedirect('/')
+
+def submit_music(request):
+    if request.method == "GET":
+        form = SubmitMusicForm()
+        return render(request, 'blog/submit_music.html', {'form': form})
+    if request.method == "POST":
+        form = SubmitMusicForm(request.POST)
+        return HttpResponseRedirect('/')
+
 
 def about(request):
     return render(request, 'blog/about.html')
@@ -411,12 +420,20 @@ def register(request):
         user_form = UserProfileForm(data=request.POST)
 
         if user_form.is_valid():
+            from django.contrib.auth.backends import ModelBackend
             user = user_form.save()
             user.set_password(user.password)
             user.save()
             registered = True
+            user = authenticate(username=user.username, password=user.password)
+            if user:
+                login(request, user)
+                return HttpResponseRedirect('/')
+            else:
+                print('fuck')
         else:
             print(user_form.errors)
+            return render(request, 'blog/register.html', {'user_form': user_form})
 
     else:
         user_form = UserProfileForm()

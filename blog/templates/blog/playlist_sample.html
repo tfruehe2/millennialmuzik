@@ -51,7 +51,7 @@
          <div class="row">
          <div class="wrapper text-center">
            <button id="editButton" class="btn btn-warning">Edit Playlist</button>
-           <button class="btn btn-danger" id="delete-btn" data-id="{{ post.id }}">
+           <button class="btn btn-danger" id="delete-btn" data-id="{{ playlist.post.id }}">
              <i class="fa fa-times"> Delete</i>
            </button>
            <button id="saveButton" class="btn btn-success" style="display: none;">Save Changes</button>
@@ -343,7 +343,6 @@ var tag = document.createElement('script');
           data: {'post_id': $(this).attr('data-id')},
           success: function(json) {
             window.location.href = '/'
-            alert('post was deleted')
           },
           error: function(error) {
             console.log('failed to delete post');

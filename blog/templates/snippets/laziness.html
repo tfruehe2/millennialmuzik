@@ -1,0 +1,10 @@
+{% extends 'blog/index.html' %}
+{% block script_block %}
+<script>
+$('#songName', "#playlistModal")
+    .text("Song to be added: " + "{{ song_name }}");
+$('#playlistModal')
+    .attr('data-song-id', "{{ song_id }}")
+    .modal('show');
+</script>
+{% endblock %}

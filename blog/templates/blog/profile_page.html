@@ -17,6 +17,10 @@
 {% endblock %}
 
 {% block body_block %}
+{% if user != profile %}
+<p>Hey this isn't your profile page!</p>
+<a href="{% url 'blog:profile_page' pk=user.id %}">heres a link to yours</a>
+{% else %}
 {% if profile.likes.all %}
   <div class="btn-group" id="profileBtnGroup">
     <button class="btn btn-default mylikes-btn">
@@ -32,16 +36,21 @@
       {% include 'snippets/post_cells.html' %}
     {% endfor %}
   </div>
-  {% endif %}
-
+{% else %}
+<h5>here is where the tracks you've liked will reside. I know its pretty bland right now so please bear with me...</h5>
+{% endif %}
+{% if profile.playlist_set.all %}
     <h2 id="myPlaylists" class="text-center">My Playlists</h2>
     {% for playlist in profile.playlist_set.all %}
     <div class="myPlaylists">
       {% include 'snippets/playlist_cell.html' %}
     </div>
     {% endfor %}
+{% endif %}
+
 
 {% include 'snippets/pagination.html' %}
+{% endif %}
 {% endblock %}
 
 {% block script_block %}

@@ -20,6 +20,16 @@
              </ul>
          </li>
          <li>
+             <a href="{% url "blog:playlist_feed" %}"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-youtube-play fa-stack-1x "></i></span>Playlists</a>
+         </li>
+         <li>
+           <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-users fa-stack-1x "></i></span>Community</a>
+           <ul class="nav-pills nav-stacked" style="list-style-type:none;">
+               <li><a href="{% url "blog:suggestions" %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Suggestions</a></li>
+               <li><a href="{% url "blog:submit_music" %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Submit Music</a></li>
+           </ul>
+         </li>
+         <li>
              <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-newspaper-o fa-stack-1x "></i></span>Articles</a>
              <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                  <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>News</a></li>
@@ -28,16 +38,7 @@
 
              </ul>
          </li>
-         <li>
-           <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-users fa-stack-1x "></i></span>Community</a>
-           <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-               <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Forums</a></li>
-               <li><a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Submit Music</a></li>
-           </ul>
-         </li>
-         <li>
-             <a href="{% url "blog:playlist_feed" %}"> <span class="fa-stack fa-lg pull-left"><i class="fa fa-youtube-play fa-stack-1x "></i></span>Playlists</a>
-         </li>
+
          <li>
              <a href="{% url 'blog:about' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span>About</a>
          </li>

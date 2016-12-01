@@ -19,10 +19,11 @@
     <strong>or with email</strong>
     <div class="row">
     <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-    <form class="form-horizontal" method="post" action="{% url "blog:register" %}">
+    <form class="form-horizontal" method="post" action="{% url "social:complete" "email" %}">
       {% csrf_token %}
       {% for field in user_form %}
       <div class="form-group">
+      {{ field.errors }}
       {{ field }}
       </div>
       {% endfor %}

@@ -174,6 +174,10 @@
         e.preventDefault();
         var name = $(this).attr('data-song-name');
         var songID = $(this).attr('data-song-id');
+        var urlString = '/create_playlist/'+songID+'/'
+        console.log(urlString)
+        $('#playlistForm, #playlistModal').attr('action', urlString)
+
         $('#songName', "#playlistModal")
             .text("Song to be added: "+name);
         $('#playlistModal')
@@ -182,17 +186,28 @@
 
       });
 
+      $('#playlistImage').change(function(){
+        var re = new RegExp("^(image/.{3,4})$")
+        var file = this.files[0]
+        if (!re.test(file.type)) {
+          alert('Sorry, the file you added was not an image!');
+          $(this).val("");
+        }
+        else if (file.size >= 2000000) {
+          alert('Sorry, your image file is too big!\n2Mbs is the cutoff')
+          $(this).val('');
+        }
+      });
+
       $('#submitPlaylist').click(function(e) {
         console.log('clicked')
         e.preventDefault();
-        var name = $("#playlistName",'#playlistForm').val()
-        var description = $("#playlistDescription",'#playlistForm').val()
-        var is_private = $("#is_private",'#playlistForm').is(':checked')
+        var form = $('#playlistForm, #playlistModal').serialize()
 
         $.ajax({
-          url: "{% url 'blog:create_playlist' %}",
+          url: $('#playlistForm, #playlistModal').attr('action'),
           type: "POST",
-          data: { 'song_id':$("#playlistModal").attr('data-song-id'), "name":name, "description":description, "is_private":is_private},
+          data: form,
           dataType: 'json',
           success: function(data) {
             if (data.e) {
@@ -268,14 +283,14 @@
             .addClass('create');
         $('#playlistList').empty()
         $('#modalForm', '#playlistModal').toggle()
-        $("#submitPlaylist").toggle()
+        $("#createPlaylistBtn").toggle()
         $('#addToPlaylistBtn').hide()
 
       })
       $('#addToPlaylist').on('updateModalBody', function(e) {
         console.log('AddTo playlist clicked')
         $('#modalForm', '#playlistModal').hide()
-        $("#submitPlaylist").hide()
+        $("#createPlaylistBtn").hide()
         $('#addToPlaylistBtn').toggle()
         $.ajax({
           url: "{% url "blog:user_playlists" pk=user.pk %}",

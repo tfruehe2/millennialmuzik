@@ -32,8 +32,10 @@ urlpatterns = [
     url(r'^add_post/$', views.add_post.as_view(), name='add_post'),
     url(r'^add_song/$', views.add_song.as_view(), name='add_song'),
     url(r'^add_to_playlist/$', views.add_to_playlist, name="add_to_playlist"),
-    url(r'^create_playlist/$', views.create_playlist, name="create_playlist"),
+    url(r'^create_playlist/(?P<song_id>[0-9]+)/$', views.create_playlist, name="create_playlist"),
     url(r'^edit_playlist/$', views.edit_playlist, name="edit_playlist"),
     url(r'^delete_post/$', views.delete_post, name="delete_post"),
+    url(r'^add_suggestion/$', views.suggestions, name="suggestions"),
+    url(r'^submit_music/$', views.submit_music, name="submit_music"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

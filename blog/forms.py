@@ -4,6 +4,7 @@ from .models import Feed, Post, UserProfile, Comment, Song, Playlist
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, HTML
 from crispy_forms.bootstrap import FormActions, StrictButton
+
 class FeedForm(ModelForm):
     class Meta:
         model = Feed
@@ -78,22 +79,23 @@ class PlaylistForm(ModelForm):
 
     class Meta:
         model = Playlist
-        fields = ['name', 'description', 'image', 'is_private', 'tags', 'created_by', 'songs']
-        widgets = {'songs': forms.HiddenInput(),
-                'tags': forms.HiddenInput(),'created_by':forms.HiddenInput()}
-        labels = {
-        'name': 'Playlist Name'
+        fields = ['name', 'description', 'image', 'is_private']
+        widgets = {
+            'name': forms.TextInput(
+                attrs={'class': 'form-control', 'placeholder': "playlist name..."}
+            ),
+            'description': forms.Textarea(
+                attrs={'class':'form-control', "rows":'4', 'placeholder':"my favorite [insert genre] songs..."}
+            ),
+            'image': forms.FileInput(),
         }
-    def __init__(self, *args, **kwargs):
-        super(PlaylistForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_id = 'playlistForm'
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-sm-2'
-        self.helper.field_class = 'col-sm-8'
-        self.helper.form_method = "POST"
 
-
+        labels = {
+        'name': 'Playlist Name',
+        'description': 'Description',
+        'image': "Playlist Image",
+        'is_private': "I want this playlist to be private"
+        }
 
 
 class CommentForm(ModelForm):
@@ -103,3 +105,23 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ['body',]
+
+class SubmitMusicForm(forms.Form):
+    Artist = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': "artist's name..."}
+    ))
+    Song_Name = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': "song's name..."}
+    ))
+    url = forms.CharField(required=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': "option url to music video..."}
+    ))
+
+
+class SuggestionsForm(forms.Form):
+    What_Needs_Improvement = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': "what about this website pisses you off..."}
+    ))
+    Suggestions_On_How = forms.CharField(widget=forms.Textarea(
+        attrs={'class':'form-control', 'placeholder':"suggestions or example of website that does it better...", "rows":'4'}
+    ))

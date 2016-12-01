@@ -23,37 +23,21 @@
       </div>
       <div class="modal-body">
         <div id="modalForm">
-          <form id="playlistForm">
+          <form id="playlistForm" method="post" action="" enctype="multipart/form-data">
             {% csrf_token %}
+            {% for field in playlist_form %}
             <div class="form-group">
-              <label for="playlistName">Playlist</label>
-              <p id="nameError" style="color:red;display:none;">Playlist name is required</p>
-              <input type="text" class="form-control" id="playlistName" placeholder="playlist name..." required="True">
+              {{ field.errors }}
+              {{ field.label_tag }} {{ field }}
             </div>
-            <div class="form-group">
-              <label for="playlistDescription">Description</label>
-              <p id="descriptionError" style="color:red;display:none;">Playlist description is required</p>
-              <textarea class="form-control" id="playlistDescription" placeholder="my favorite [insert genre] songs..." row="4" required="True"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="playlistImage">Playlist Image</label>
-              <input type="file" id="playlistImage">
-            </div>
-            <div class="form-group">Playlist will be&nbsp;
-              <label class="radio-inline">
-                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="False" checked="checked">Public
-              </label>
-              <label class="radio-inline">
-                <input type="radio" name="inlineRadioOptions" id="is_private" value="True">Private
-              </label>
-            </div>
+            {% endfor %}
           </form>
         </div>
       </div>
       <div id="playlistList"></div>
       <div class="modal-footer">
         &emsp;&ensp;<strong class="pull-left" id="songName"></strong>
-        <button class="btn btn-success" id="submitPlaylist" type="button">Create Playlist</button>
+        <button type="submit" form="playlistForm" class="btn btn-success" id="createPlaylistBtn">Create Playlist</button>
         <button class="btn btn-success" id="addToPlaylistBtn" type="button" style="display: none;">Add To Playlist</button>
       </div>
     </div>

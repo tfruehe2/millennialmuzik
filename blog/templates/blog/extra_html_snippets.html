@@ -22,6 +22,29 @@
 </li>
 -->
 
+<div class="form-group">
+  <label for="playlistName">Playlist</label>
+  <p id="nameError" style="color:red;display:none;">Playlist name is required</p>
+  <input type="text" class="form-control" id="playlistName" placeholder="playlist name..." required="True">
+</div>
+<div class="form-group">
+  <label for="playlistDescription">Description</label>
+  <p id="descriptionError" style="color:red;display:none;">Playlist description is required</p>
+  <textarea class="form-control" id="playlistDescription" placeholder="my favorite [insert genre] songs..." row="4" required="True"></textarea>
+</div>
+<div class="form-group">
+  <label for="playlistImage">Playlist Image</label>
+  <input type="file" id="playlistImage">
+</div>
+<div class="form-group">Playlist will be&nbsp;
+  <label class="radio-inline">
+    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="False" checked="checked">Public
+  </label>
+  <label class="radio-inline">
+    <input type="radio" name="inlineRadioOptions" id="is_private" value="True">Private
+  </label>
+</div>
+
 <li><a class="nav-link" href="{% url 'blog:about' %}">About</a></li>
 <li class="dropdown"> <a class="dropdown-toggle" data-toggle="dropdown" href="#">Blogs<span class="caret"></span></a>
  <ul class="dropdown-menu">
