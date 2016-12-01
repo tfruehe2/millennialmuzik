@@ -4,7 +4,7 @@
 {% block title_content_block %}
 <div class="wrapper text-center">
   {% for genre in genre_list %}
-  <button class="btn btn-default genre-button" id="genre-button" data-id="{% url "blog:music_by_genre" kw=genre.name %}">
+  <button class="btn btn-default genre-button" id="genre-button" data-url="{% url "blog:music_by_genre" kw=genre.name %}">
     {{ genre.get_name_display }}
   </button>
   {% endfor %}
@@ -20,7 +20,7 @@
       .closest('.row')
       .next('.body-block')
       .remove(".row")
-      .load($this.attr("data-id"));
+      .load($this.attr("data-url"));
  });
 
 </script>

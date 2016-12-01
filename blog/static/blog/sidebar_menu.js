@@ -24,5 +24,8 @@ function initMenu() {
       }
     }
   );
+  $('body').addClass('loaded');
 }
-$(document).ready(function() {initMenu();});
+$(document).ready(function() {
+  initMenu();
+});

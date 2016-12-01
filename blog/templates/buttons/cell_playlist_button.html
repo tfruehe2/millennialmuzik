@@ -1,0 +1,16 @@
+{% if user.is_authenticated %}
+<button type="button" class="btn btn-default pull-right playlist-button borderless" data-toggle="tooltip"
+data-placement="left" title="add to a playlist" data-song-id="{{post.song.id}}" data-song-name="{{post.song.full_name}}">
+  <i class="fa fa-th-list fa-lg"></i>
+</button>
+{% else %}
+<a tabindex="0" class="btn btn-default pull-right borderless signin-prompt sharp" data-container="body"
+data-toggle="popover" data-placement="left" title="Want To Make A Playlist?"
+data-content="<p>You must be signed in to make one</p>
+<div class='wrapper text-center'>
+<a class='btn btn-default btn-small' href='{% url 'blog:login' %}'>sign in</a>
+<a class='btn btn-default btn-small' href='{% url 'blog:register' %}'>sign up</a>
+</div>">
+  <i class="fa fa-th-list fa-lg"></i>
+</a>
+{% endif %}

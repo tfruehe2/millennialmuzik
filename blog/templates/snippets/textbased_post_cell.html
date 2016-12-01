@@ -32,17 +32,11 @@
       </div>
       <div class="col-sm-3">
         <div class="btn-group-vertical pull-right">
-            <button class="btn btn-default like-button" data-id="{{ post.id }}">
-            {% if user.userprofile in post.liked_by.all %}
-              <i class="fa fa-heart fa-2x"></i>
-            {% else %}
-              <i class="fa fa-heart-o fa-2x"></i>
-            {% endif %}
-            </button>
+            {% include 'buttons/cell_like_button.html' %}
             <button class="btn btn-default fb-login-btn" data-url="http://test1.com:8000"+"{{ post.get_absolute_url }}">
               <i class="fa fa-facebook fa-2x"></i>
             </button>
-            <button class="btn btn-default tw-login-btn">
+            <button class="btn btn-default tw-login-btn sharp">
               <a href="https://twitter.com/intent/tweet?url={{ post.quote_url }}&via=MillennialMuzik&text=custom%20share%20text">
               <i class="fa fa-twitter fa-2x"></i>
             </a>

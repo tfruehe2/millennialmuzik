@@ -1,0 +1,20 @@
+{% if user.is_authenticated %}
+  <button class="btn btn-default like-button heart-button" data-id="{{ post.id }}">
+    {% if user in post.liked_by.all %}
+    <i class="fa fa-heart fa-2x"></i>
+    {% else %}
+    <i class="fa fa-heart-o fa-2x"></i>
+    {% endif %}
+  </button>
+{% else %}
+<a tabindex="0" class="btn btn-default heart-button signin-prompt sharp" data-container="body"
+data-toggle="popover" data-placement="left" title="Like This Post?"
+data-content="<p>You must be signed in to like a post</p>
+<div class='wrapper text-center'>
+<a class='btn btn-default btn-small' href='{% url 'blog:login' %}'>sign in</a>
+<a class='btn btn-default btn-small' href='{% url 'blog:register' %}'>sign up</a>
+</div>">
+  <i class="fa fa-heart-o fa-2x"></i>
+</a>
+
+{% endif %}
