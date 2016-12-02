@@ -6,6 +6,7 @@ $(".mv-btn").click(function(e) {
         src: embed.replace("ID", $this.attr('data-id')),
         width: "280",
         height: "210",
+        origin: "http://millennialsmusic.com/",
         frameborder: "0",
         allowfullscreen: "1"
       });

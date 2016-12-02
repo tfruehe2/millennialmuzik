@@ -49,14 +49,10 @@
               <i class="fa fa-youtube fa-2x"></i>
               </a>
             </button>
-            <button class="btn btn-default fb-login-btn" data-url="http://test1.com:8000"+"{{ post.get_absolute_url }}">
-              <i class="fa fa-facebook fa-2x"></i>
-            </button>
-            <button class="btn btn-default tw-login-btn sharp">
-              <a href="https://twitter.com/intent/tweet?url={{ post.quote_url }}&via=MillennialMuzik&text=custom%20share%20text">
-              <i class="fa fa-twitter fa-2x"></i>
-            </a>
-            </button>
+
+            {% include 'buttons/fb_share_button.html' %}
+
+            {% include 'buttons/twitter_share_button.html' %}
         </div>
     </div>
   </div>

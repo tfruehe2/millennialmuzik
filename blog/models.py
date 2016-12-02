@@ -77,11 +77,11 @@ class Post(models.Model):
         self.save()
 
     def get_absolute_url(self):
-        return '{}blog/{}'.format(self.feed.slug, self.id)
+        return 'http://www.millennialsmusic.com/{}blog/{}'.format(self.feed.slug, self.id)
+
 
     def quote_url(self):
-        url_string = "http://test1.com:8000" + self.get_absolute_url()
-        return urllib.parse.quote(url_string)
+        return urllib.parse.quote(self.get_absolute_url())
 
 
 class Song(models.Model):

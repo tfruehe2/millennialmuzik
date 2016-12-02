@@ -28,15 +28,28 @@
          <div class="panel-footer" id="postFooter" style="background-color:#ffffff">
              <div class="row">
               <div class="col-sm-4 pull-left">
-              <button class="btn btn-default like-button heart-button" data-id="{{ post.id }}">
-                <span>
-                {% if user in post.liked_by.all %}
-                <i class="fa fa-heart fa-lg"></i>
-                {% else %}
-                <i class="fa fa-heart-o fa-lg"></i>
-                {% endif %}
-                <strong>  {{ post.num_likes }}</strong></span>
-              </button>
+              {% if user.is_authenticated %}
+                <button class="btn btn-default like-button heart-button" data-id="{{ post.id }}">
+                  <span>
+                  {% if user in post.liked_by.all %}
+                  <i class="fa fa-heart fa-lg"></i>
+                  {% else %}
+                  <i class="fa fa-heart-o fa-lg"></i>
+                  {% endif %}
+                  <strong>  {{ post.num_likes }}</strong></span>
+                </button>
+              {% else %}
+              <a tabindex="0" class="btn btn-default heart-button signin-prompt sharp" data-container="body"
+              data-toggle="popover" data-placement="right" title="Like This Post?"
+              data-content="<p>You must be signed in to like a post</p>
+              <div class='wrapper text-center'>
+              <a class='btn btn-default btn-small' href='{% url 'blog:login' %}'>sign in</a>
+              <a class='btn btn-default btn-small' href='{% url 'blog:register' %}'>sign up</a>
+              </div>">
+                <i class="fa fa-heart-o fa-2x"></i>
+              </a>
+
+              {% endif %}
             </div>
                <strong class="col-sm-2 col-sm-offset-1 text-center">Views: {{ post.views }}</strong>
             <div class="col-sm-5">

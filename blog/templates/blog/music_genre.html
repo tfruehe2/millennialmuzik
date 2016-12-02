@@ -17,9 +17,9 @@
     e.preventDefault();
    var $this  = $(this);
    $this
-      .closest('.row')
-      .next('.body-block')
-      .remove(".row")
+      .closest('#title-row')
+      .next('#body-row')
+      .remove("#body-block")
       .load($this.attr("data-url"));
  });
 

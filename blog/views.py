@@ -195,7 +195,16 @@ class BlogPost(DetailView):
     template_name = 'blog/blog_post.html'
     def get_context_data(self, **kwargs):
         context = super(BlogPost, self).get_context_data(**kwargs)
-        #self.object.increment_view_count()
+        if self.request.session.get(self.object.title, False):
+            last_visit_cookie = get_server_side_cookie(self.request, self.object.title)
+            last_visit_time = datetime.strptime(last_visit_cookie[:16], "%Y-%m-%d %H:%M")
+            if (datetime.now() - last_visit_time).seconds > 1800:
+                self.object.increment_view_count()
+                self.request.session[self.object.title] = str(datetime.now())
+        else:
+            self.object.increment_view_count()
+            self.request.session[self.object.title] = str(datetime.now())
+
         return context
 
 class PopularMusic(ListView):
@@ -296,7 +305,16 @@ class Playlist_View(DetailView):
     def get_context_data(self, **kwargs):
         context = super(Playlist_View, self).get_context_data(**kwargs)
         entrys = PlaylistEntry.objects.filter(playlist=self.object)
-        #self.object.post.increment_view_count()
+        if self.request.session.get(self.object.post.title, False):
+            last_visit_cookie = get_server_side_cookie(self.request, self.object.post.title)
+            last_visit_time = datetime.strptime(last_visit_cookie[:16], "%Y-%m-%d %H:%M")
+            if (datetime.now() - last_visit_time).seconds > 1800:
+                self.object.post.increment_view_count()
+                self.request.session[self.object.post.title] = str(datetime.now())
+        else:
+            self.object.post.increment_view_count()
+            self.request.session[self.object.post.title] = str(datetime.now())
+
         context['PlaylistEntry'] = entrys
         id_list = []
         for entry in entrys:
