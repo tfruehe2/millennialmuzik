@@ -5,8 +5,8 @@
 <div class="col-md-8 col-sm-12">
 <div class="panel panel-default" id="postPanel" data-id="{{ post.id }}">
         <div class="panel-heading" id="postHeader">
-          <h2 class="panel-title">{{ playlist.post.title }}</h2>
-          <p class="text-muted">by {{ playlist.post.author }} {{ playlist.post.pub_date|timesince }} ago</p>
+          <h2 class="panel-title">{{ post.title }}</h2>
+          <p class="text-muted">by {{ post.author }} {{ post.pub_date|timesince }} ago</p>
         </div>
 
         <div class="panel-body" id="postPanelBody">
@@ -40,7 +40,7 @@
 
                 {% endif %}
             </div>
-               <strong class="col-sm-4 text-center">Views: {{ playlist.post.views }}</strong>
+               <strong class="col-sm-4 text-center">Views: {{ post.views }}</strong>
             <div class="col-sm-4">
               <div class="btn-group pull-right">
                 <button class="btn btn-default yt-button">
@@ -60,11 +60,11 @@
 
             </div>
          </div>
-         {% if user == playlist.post.author %}
+         {% if user == post.author %}
          <div class="row">
          <div class="wrapper text-center">
            <button id="editButton" class="btn btn-warning">Edit Playlist</button>
-           <button class="btn btn-danger" id="delete-btn" data-id="{{ playlist.post.id }}">
+           <button class="btn btn-danger" id="delete-btn" data-id="{{ post.id }}">
              <i class="fa fa-times"> Delete</i>
            </button>
            <button id="saveButton" class="btn btn-success" style="display: none;">Save Changes</button>
@@ -78,7 +78,7 @@
       <div class="col-sm-12 col-md-4 ">
         <div class="panel panel-default" id="playlistPanel">
           <div class="panel-heading" id="playlistHeader">
-            <h1 class="panel-title text-center">Playlist</h1>
+            <h1 class="panel-title">Playlist</h1>
           </div>
           <div class="" style="overflow:auto;padding-top:10px;" id="song-list">
           <ul class="media-list" id="playlistElements">
@@ -130,7 +130,7 @@
       {% if user.is_authenticated %}
       <div class="row">
         <div class="col-sm-8">
-        <form method="post" action="{% url "blog:post_comment" post_id=playlist.post.id %}" id="comment-form">
+        <form method="post" action="{% url "blog:post_comment" post_id=post.id %}" id="comment-form">
           {% csrf_token %}
           {% for field in comment_form %}
           <div class="form-group">
@@ -187,8 +187,8 @@
          {% endif %}
          </blockquote>
          <ul class="media-list">
-           {% if playlist.post.comments %}
-           {% for comment in playlist.post.comments.all %}
+           {% if post.comments %}
+           {% for comment in post.comments.all %}
            <li class="media">
              <div class="pull-left btn-group-vertical media-object">
                <a class="btn btn-default borderless upvote-btn">
@@ -290,7 +290,7 @@ var tag = document.createElement('script');
     var data
 
     $("#saveButton").click(function() {
-        data = {"playlist_id": "{{playlist.id}}",
+        data = {"playlist_id": "{{post.playlist.id}}",
                     "deleted_songs" : deletedElements,
                     "song_order": elementOrder}
       if (updated) {

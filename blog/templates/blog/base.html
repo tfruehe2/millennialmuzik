@@ -3,17 +3,18 @@
     {% load static %}
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'blog/bootstrap.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'blog/style.css' %}" />
-    <link href="{% static 'blog/simple-sidebar.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'blog/public/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'blog/jquery-ui.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'blog/jquery-ui.structure.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'blog/jquery-ui.theme.min.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/css/style.css' %}" />
+    <link href="{% static 'blog/css/simple-sidebar.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/css/jcarousel_style.css' %}" />
+    <link href="{% static 'blog/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'blog/css/jquery-ui.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'blog/css/jquery-ui.structure.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'blog/css/jquery-ui.theme.min.css' %}" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div id="fb-root"></div>
-    <script src="{% static "blog/social_media.js" %}"></script>
+    <script src="{% static "blog/js/social_media.js" %}"></script>
     <div id="loader-wrapper">
 			<div id="loader"><h2 style="color:#eeeeee">Loading...</h2></div>
 
@@ -53,9 +54,11 @@
 
 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-      <script src="{% static 'blog/jquery-ui.min.js' %}"></script>
-      <script src="{% static 'blog/bootstrap.min.js' %}"></script>
-      <script src="{% static 'blog/sidebar_menu.js' %}"></script>
+      <script src="{% static 'blog/js/jquery-ui.min.js' %}"></script>
+      <script src="{% static 'blog/js/bootstrap.min.js' %}"></script>
+      <script src="{% static 'blog/js/sidebar_menu.js' %}"></script>
+      <script src="{% static 'blog/js/music_cell_buttons.js' %}"></script>
+
 
       <script>
 
@@ -103,7 +106,6 @@
         }
       });
       </script>
-      <script src="{% static 'blog/music_cell_buttons.js' %}"></script>
 
       <script>
 

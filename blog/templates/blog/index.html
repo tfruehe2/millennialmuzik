@@ -4,22 +4,98 @@
   {% block title_block %}
   <div class="row">
     <div class="col-sm-12">
-      <h1 class="page-header text-center">Latest Posts</h1>
-      <div class="container">
-      </div>
+      <h1 class="page-header text-center">Featured Playlists</h1>
     </div>
   </div>
+  <div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+      <div class="jcarousel-wrapper">
+        <div class="jcarousel" data-jcarousel="true">
+          <ul class="carousel-list" style="left:0px;top:0px;">
+            {% for playlist in playlists %}
+            <li style="width:200px;">
+            {% include "snippets/playlist_carousel_cell.html" %}
+            </li>
+            {% endfor %}
+          </ul>
+      </div>
+      <a class="jcarousel-control-prev" href="#">
+        <i class="fa fa-chevron-circle-left fa-4x" style="margin-top:-4px;margin-left:-1px"></i>
+      </a>
+      <a class="jcarousel-control-next" href="#">
+        <i class="fa fa-chevron-circle-right fa-4x" style="margin-top:-4px;margin-left:-1px"></i>
+      </a>
+      <p class="jcarousel-pagination" data-jcarouselpagination="true"></p>
+    </div>
+  </div>
+</div>
+
   {% endblock %}
 
   {% block body_block %}
           {% if feed_list %}
-
+          <h1 class="page-header">Newest Songs</h1>
             {% for post in feed_list %}
             {% include 'snippets/post_cells.html' %}
             {% endfor %}
 
             {% else %}
-            <p>No blogs are available</p>
+            <p>No posts are available</p>
           {% endif %}
       {% include 'snippets/pagination.html' %}
   {% endblock %}
+
+{% block script_block %}
+<script src="{% static 'blog/js/jquery.jcarousel.min.js' %}"></script>
+<script>
+(function($) {
+    $(function() {
+        var jcarousel = $('.jcarousel');
+
+        jcarousel
+            .on('jcarousel:reload jcarousel:create', function () {
+                var carousel = $(this),
+                    width = carousel.innerWidth();
+
+                if (width >= 600) {
+                    width = width / 3;
+                } else if (width >= 350) {
+                    width = width / 2;
+                }
+
+                carousel.jcarousel('items').css('width', Math.ceil(width) + 'px');
+            })
+            .jcarousel({
+                wrap: 'circular'
+            });
+
+        $('.jcarousel-control-prev')
+            .jcarouselControl({
+                target: '-=1'
+            });
+
+        $('.jcarousel-control-next')
+            .jcarouselControl({
+                target: '+=1'
+            });
+
+        $('.jcarousel-pagination')
+            .on('jcarouselpagination:active', 'a', function() {
+                $(this).addClass('active');
+            })
+            .on('jcarouselpagination:inactive', 'a', function() {
+                $(this).removeClass('active');
+            })
+            .on('click', function(e) {
+                e.preventDefault();
+            })
+            .jcarouselPagination({
+                perPage: 1,
+                item: function(page) {
+                    return '<a href="#' + page + '">' + page + '</a>';
+                }
+            });
+    });
+})(jQuery);
+</script>
+{% endblock %}

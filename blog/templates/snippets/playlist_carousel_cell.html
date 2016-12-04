@@ -1,0 +1,12 @@
+{% load staticfiles %}
+
+<div class="wrapper text-center">
+  <a href="{% url "blog:playlist" pk=playlist.post.id %}" style="color:#212121;">
+  {% if playlist.image %}
+    <img src="/media/{{ playlist.image }}" class="img-responsive center-block img-rounded" id="img-container"/>
+  {% else %}
+    <img src="{% static "blog/public/images/millennialsmusic_icon.jpg" %}" class="img-responsive center-block img-rounded" />
+  {% endif %}
+  <h4>{{ playlist.name }}</h4>
+  </a>
+</div>

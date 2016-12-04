@@ -168,13 +168,11 @@ class index(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(index, self).get_context_data(**kwargs)
-        context['request'] = self.request
-        context['user'] = self.request.user
-        #can pass request to cookie handler later
+        context['playlists'] = Playlist.objects.filter(created_by__username="tfruehe")[:5]
         return context
 
     def get_queryset(self):
-        return Post.objects.filter(is_private=False).order_by('-pub_date', 'title')
+        return Post.objects.filter(is_song=True).order_by('-pub_date', 'title')
 
 class feed(ListView):
     template_name = "blog/blog_feed.html"
@@ -198,7 +196,7 @@ class BlogPost(DetailView):
         if self.request.session.get(self.object.title, False):
             last_visit_cookie = get_server_side_cookie(self.request, self.object.title)
             last_visit_time = datetime.strptime(last_visit_cookie[:16], "%Y-%m-%d %H:%M")
-            if (datetime.now() - last_visit_time).seconds > 1800:
+            if (datetime.now() - last_visit_time).seconds > 3600:
                 self.object.increment_view_count()
                 self.request.session[self.object.title] = str(datetime.now())
         else:
@@ -298,23 +296,23 @@ class Playlist_Feed(ListView):
         return Post.objects.filter(is_playlist=True, is_private=False).order_by('-pub_date', 'title')
 
 class Playlist_View(DetailView):
-    model = Playlist
-    context_object_name = 'playlist'
+    model = Post
+    context_object_name = 'post'
     template_name = 'blog/playlist_sample.html'
 
     def get_context_data(self, **kwargs):
         context = super(Playlist_View, self).get_context_data(**kwargs)
-        entrys = PlaylistEntry.objects.filter(playlist=self.object)
-        if self.request.session.get(self.object.post.title, False):
-            last_visit_cookie = get_server_side_cookie(self.request, self.object.post.title)
+        if self.request.session.get(self.object.title, False):
+            last_visit_cookie = get_server_side_cookie(self.request, self.object.title)
             last_visit_time = datetime.strptime(last_visit_cookie[:16], "%Y-%m-%d %H:%M")
-            if (datetime.now() - last_visit_time).seconds > 1800:
-                self.object.post.increment_view_count()
-                self.request.session[self.object.post.title] = str(datetime.now())
+            if (datetime.now() - last_visit_time).seconds > 3600:
+                self.object.increment_view_count()
+                self.request.session[self.object.title] = str(datetime.now())
         else:
-            self.object.post.increment_view_count()
-            self.request.session[self.object.post.title] = str(datetime.now())
+            self.object.increment_view_count()
+            self.request.session[self.object.title] = str(datetime.now())
 
+        entrys = PlaylistEntry.objects.filter(playlist=self.object.playlist)
         context['PlaylistEntry'] = entrys
         id_list = []
         for entry in entrys:
