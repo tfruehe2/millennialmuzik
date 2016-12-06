@@ -88,8 +88,8 @@
             -ms-transform: translateY(-100%);  /* IE 9 */
                 transform: translateY(-100%);  /* Firefox 16+, IE 10+, Opera */
 
-        -webkit-transition: all 0.3s 0.7s ease-out;
-                transition: all 0.3s 0.7s ease-out;
+        -webkit-transition: all 0.3s 1.2s ease-out;
+                transition: all 0.3s 1.2s ease-out;
     }
 
 @media (max-width: 768px) {

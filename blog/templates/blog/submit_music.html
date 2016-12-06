@@ -12,7 +12,7 @@
 
 {% block body_block %}
 
-<form role="form" action="{% url "blog:submit_music" %}" method="post">
+<form id="music_form" role="form" action="{% url "blog:submit_music" %}" method="post">
     {% csrf_token %}
     {% for field in form %}
     <div class="form-group">
@@ -21,4 +21,12 @@
     {% endfor %}
     <button type="submit" class="btn btn-success">Submit</button>
 </form>
+{% endblock %}
+
+{% block script_block %}
+<script>
+$("#music_form").on('submit', function() {
+  alert("thanks for the recommendation!")
+});
+</script>
 {% endblock %}

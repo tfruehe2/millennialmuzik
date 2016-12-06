@@ -19,13 +19,15 @@
 
   {% endblock %}
   {% block body_block %}
+  <div id="body">
 
     {% for post in post_list %}
     {% include 'snippets/post_cells.html' %}
     {% endfor %}
 
-  {% include 'snippets/pagination.html' %}
+    {% include 'snippets/pagination.html' %}
 
+  </div>
   {% endblock %}
 
   {% block script_block %}

@@ -1,4 +1,31 @@
-{% extends 'blog/blog_feed' %}
+{% extends 'blog/blog_feed.html' %}
 
 {% block title_content_block %}
+<div class="row">
+  <div class="col-sm-2">
+    <div class="form-group form-inline">
+    <label for="select-box">Sort By</label>&nbsp;&nbsp;
+    <select id="select-box" class="form-control">
+      <option value="{% url "blog:popular_music" kw="likes" %}">Likes</option>
+      <option value="{% url "blog:popular_music" kw="views" %}">Views</option>
+      <option value="{% url "blog:popular_music" kw="newest" %}">Newest</option>
+    </select>
+  </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block script_block %}
+<script>
+$("#select-box").on('change', function(e) {
+  e.preventDefault()
+  var $this  = $(this);
+  $this
+     .closest('#title-row')
+     .next('#body-row')
+     .find("#body")
+     .load($this.val());
+});
+</script>
 {% endblock %}

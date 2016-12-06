@@ -11,12 +11,11 @@
           {% endif %}
 
           <li>
-             <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-music fa-stack-1x "></i></span>Music</a>
+             <a href="{% url 'blog:Music' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-music fa-stack-1x "></i></span>Music</a>
                 <ul class="nav-pills nav-stacked" style="list-style-type:none;">
                  <li><a href="{% url 'blog:PopularMusic' %}">Popular</a></li>
                  <li><a href="{% url 'blog:MusicByGenre' %}">By Genre</a></li>
-                 <li><a href="{% url 'blog:TrendingMusic' %}">Trending</a></li>
-                 <li><a href="#">Random Song</a></li>
+                 <li><a href="{% url 'blog:random_song' %}">Random Song</a></li>
              </ul>
          </li>
          <li>
@@ -25,8 +24,8 @@
          <li>
            <a href="#"><span class="fa-stack fa-lg pull-left"><i class="fa fa-users fa-stack-1x "></i></span>Community</a>
            <ul class="nav-pills nav-stacked" style="list-style-type:none;">
-               <li><a href="{% url "blog:suggestions" %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Suggestions</a></li>
-               <li><a href="{% url "blog:submit_music" %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-flag fa-stack-1x "></i></span>Submit Music</a></li>
+               <li><a href="{% url "blog:suggestions" %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-envelope fa-stack-1x "></i></span>Suggestions</a></li>
+               <li><a href="{% url "blog:submit_music" %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-gift fa-stack-1x "></i></span>Submit Music</a></li>
            </ul>
          </li>
          <li>
@@ -40,7 +39,7 @@
          </li>
 
          <li>
-             <a href="{% url 'blog:about' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-dashboard fa-stack-1x "></i></span>About</a>
+             <a href="{% url 'blog:about' %}"><span class="fa-stack fa-lg pull-left"><i class="fa fa-info-circle fa-stack-1x "></i></span>About</a>
          </li>
          <div class="row">
            <div class="col-sm-12">

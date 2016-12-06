@@ -1,6 +1,6 @@
 from django.contrib import admin
 from ordered_model.admin import OrderedTabularInline
-from .models import Feed, Post, Comment, UserProfile, Tag, Song, Like, Playlist, PlaylistEntry
+from .models import Feed, Post, Comment, UserProfile, Tag, Song, Like, Playlist, PlaylistEntry, MusicRecommendation, Suggestion
 
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
 
@@ -33,3 +33,5 @@ admin.site.register(UserProfile)
 admin.site.register(Tag)
 admin.site.register(Song)
 admin.site.register(Like)
+admin.site.register(MusicRecommendation)
+admin.site.register(Suggestion)

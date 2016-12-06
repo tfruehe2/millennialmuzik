@@ -238,6 +238,21 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
+class Suggestion(models.Model):
+    what = models.CharField(max_length=144)
+    how = models.TextField(max_length=250,blank=True)
+    def __str__(self):
+        return self.what
+
+class MusicRecommendation(models.Model):
+    artist = models.CharField(max_length=100)
+    song_name = models.CharField(max_length=100)
+    user = models.ForeignKey(UserProfile, blank=True)
+    url = models.URLField(blank=True)
+    def __str__(self):
+        return "{} - {}".format(self.artist, self.song_name)
+
 def retrieve_thumbnail(vid_id):
     import urllib.request
     from django.core.files import File

@@ -1,5 +1,18 @@
 {% extends 'blog/base.html' %}
 {% load staticfiles %}
+
+{% block head_block %}
+<meta property="og:url"                content="{{ post.get_absolute_url }}" />
+<meta property="og:type"               content="article" />
+<meta property="og:title"              content="{{ post.title }}" />
+<meta property="og:description"        content="{{ post.description }}" />
+{% if post.image %}
+<meta property="og:image"              content="/media/{{ post.image }}" />
+{% else %}
+<meta property="og:image"              content="{% static "blog/public/images/millennialsmusic_icon.jpg" %}" />
+{% endif %}
+{% endblock %}
+
 {% block body_block %}
 <div class="row">
 <div class="col-md-8 col-sm-12">
@@ -45,17 +58,13 @@
               <div class="btn-group pull-right">
                 <button class="btn btn-default yt-button">
                   <a href="{{post.song.video}}" target="_blank">
-                  <i class="fa fa-youtube fa-lg"></i>
+                  <i class="fa fa-youtube fa-2x"></i>
                   </a>
                 </button>
-                <button class="btn btn-default fb-login-btn" data-url="http://test1.com:8000"+"{{ post.get_absolute_url }}">
-                  <i class="fa fa-facebook fa-lg"></i>
-                </button>
-                <button class="btn btn-default tw-login-btn">
-                  <a href="https://twitter.com/intent/tweet?url={{ post.quote_url }}&via=MillennialMuzik&text=custom%20share%20text">
-                  <i class="fa fa-twitter fa-lg"></i>
-                </a>
-                </button>
+
+                {% include 'buttons/fb_share_button.html' %}
+
+                {% include 'buttons/twitter_share_button.html' %}
               </div>
 
             </div>
@@ -206,30 +215,6 @@
            {% endfor %}
            {% endif %}
 
-
-          <li class="media">
-            <div class="pull-left btn-group-vertical media-object">
-              <a class="btn btn-default borderless upvote-btn">
-                <i class="fa fa-thumbs-o-up fa-lg"></i><strong> 0</strong>
-              </a>
-              <a class="btn btn-default borderless downvote-btn">
-                <i class="fa fa-thumbs-o-down fa-lg"></i><strong> 0</strong>
-              </a>
-            </div>
-            <div class="media-body">
-              <strong class="media-heading">username</strong> <small class="text-muted">timestamp</small>
-              <p>sample comment body</p>
-            </div>
-          </li>
-          <li class="media">
-            <a class="pull-left" href="#">
-              <img class="media-object img-circle" src="http://www.gravatar.com/avatar/{{gravatar}}?d=monsterid&s=45">
-            </a>
-            <div class="media-body">
-              Sample Comment
-              <br /><strong class="media-heading">username</strong> <small class="text-muted">timestamp</small>
-            </div>
-          </li>
         </ul>
         </div>
       </div>

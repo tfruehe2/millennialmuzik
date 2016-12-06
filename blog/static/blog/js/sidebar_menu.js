@@ -6,6 +6,10 @@ $("#menu-toggle-2").click(function(e){
   e.preventDefault();
   $("#wrapper").toggleClass("toggled-2");
   $("#menu ul").hide();
+  setTimeout(function() {
+    window.dispatchEvent(new Event('resize'));
+  },300);
+
 });
 
 function initMenu() {

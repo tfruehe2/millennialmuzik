@@ -37,7 +37,7 @@
          </button>
        </li>
          {% if user.is_authenticated %}
-         <li><a href="/accounts/logout">Logout</a></li>
+         <li><a href="/logout">Logout</a></li>
          {% else %}
 
          <li><a href="{% url 'blog:login' %}">sign in</a></li>

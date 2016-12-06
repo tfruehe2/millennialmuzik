@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Q
+import random
 import operator
 import json
 from django.db.models import DateField
@@ -13,6 +14,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from functools import reduce
 from datetime import datetime
 
@@ -161,6 +163,14 @@ def create_playlist(request, **kwargs):
             return render(request, 'snippets/laziness.html', {'playlist_form': form, "song_name":song_name, "song_id":song_id, "feed_list":feed_list })
 
 
+def random_song(request):
+    if request.method == "GET":
+        idx = random.randint(0, Song.objects.count() -1)
+        song_obj = Song.objects.all()[idx]
+        return render(request, 'blog/blog_post.html', {"post": Post.objects.get(song=song_obj)})
+
+
+
 class index(ListView):
     template_name = 'blog/index.html'
     context_object_name = 'feed_list'
@@ -206,7 +216,7 @@ class BlogPost(DetailView):
         return context
 
 class PopularMusic(ListView):
-    template_name = "blog/blog_feed.html"
+    template_name = "blog/popular_music.html"
     context_object_name = 'post_list'
     paginate_by = 10
 
@@ -216,6 +226,13 @@ class PopularMusic(ListView):
         return context
 
     def get_queryset(self):
+        if self.kwargs['kw'] != None:
+            if self.kwargs["kw"] == 'views':
+                return Post.objects.filter(is_song=True).order_by('-views', 'title')
+            elif self.kwargs['kw'] == 'newest':
+                return Post.objects.filter(is_song=True).order_by('-pub_date', 'title')
+            else:
+                return Post.objects.filter(is_song=True).order_by('-num_likes', 'title')
         return Post.objects.filter(is_song=True).order_by('-num_likes', 'title')
 
 class MusicByGenre(ListView):
@@ -249,6 +266,39 @@ class music_by_genre(ListView):
         tag = Tag.objects.get(name=self.kwargs['kw'].upper())
         return tag.post_set.all()
 
+class popular_music(ListView):
+    template_name="blog/post_list.html"
+    context_object_name = 'post_list'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(popular_music, self).get_context_data(**kwargs)
+        context['newurl'] = "/musicblog/popular/" + self.kwargs['kw'] +"/"
+        return context
+
+
+    def get_queryset(self):
+        if self.kwargs["kw"] == 'views':
+            return Post.objects.filter(is_song=True).order_by('-views', 'title')
+        elif self.kwargs['kw'] == 'newest':
+            return Post.objects.filter(is_song=True).order_by('-pub_date', 'title')
+        else:
+            return Post.objects.filter(is_song=True).order_by('-num_likes', 'title')
+
+
+class Music(ListView):
+    template_name = "blog/blog_feed.html"
+    context_object_name = "post_list"
+    paginate_by = 12
+
+    def get_context_data(self, **kwargs):
+        context = super(Music, self).get_context_data(**kwargs)
+        context['title'] = "Music"
+
+    def get_queryset(self):
+        return Post.objects.filter(is_song=True).order_by('-pub_date', 'title')
+
+
 class TrendingMusic(ListView):
     template_name = "blog/blog_feed.html"
     context_object_name = 'post_list'
@@ -265,7 +315,28 @@ class TrendingMusic(ListView):
 class Search_Results(ListView):
     template_name = "blog/search_results.html"
     context_object_name = "search_results"
-    paginate_by = 10
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        context = super(Search_Results, self).get_context_data(**kwargs)
+        paginator = Paginator(self.get_queryset(), self.paginate_by)
+        page = self.request.GET.get('page')
+        try:
+            search_results = paginator.page(page)
+        except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+            search_results = paginator.page(1)
+        except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+            search_results = paginator.page(paginator.num_pages)
+        if self.request.GET.get('q'):
+            context['newurl'] = "/search/?q=" + str(self.request.GET.get('q')) \
+                                                    .replace(" ", "+")         \
+                                                    .replace('$', "%24")       \
+                                                    .replace('&',"%26")
+        context['search_results'] = search_results
+        return context
+
 
     def get_queryset(self, *args, **kwargs):
         result = Post.objects.all()
@@ -298,7 +369,7 @@ class Playlist_Feed(ListView):
 class Playlist_View(DetailView):
     model = Post
     context_object_name = 'post'
-    template_name = 'blog/playlist_sample.html'
+    template_name = 'blog/playlist_post.html'
 
     def get_context_data(self, **kwargs):
         context = super(Playlist_View, self).get_context_data(**kwargs)
@@ -337,6 +408,7 @@ class music_post(DetailView):
     context_object_name = 'music_post'
     template_name = 'blog/music_post.html'
 
+
 def fetch_user_playlists(request, **kwargs):
     if request.is_ajax():
         userprofile = UserProfile.objects.get(pk=kwargs['pk'])
@@ -351,7 +423,11 @@ def suggestions(request):
         return render(request, 'blog/suggestions.html', {'form': form})
     if request.method == "POST":
         form = SuggestionsForm(request.POST)
-        return HttpResponseRedirect('/')
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/')
+        else:
+            return render(request, 'blog/suggestions.html', {'form': form})
 
 def submit_music(request):
     if request.method == "GET":
@@ -359,7 +435,13 @@ def submit_music(request):
         return render(request, 'blog/submit_music.html', {'form': form})
     if request.method == "POST":
         form = SubmitMusicForm(request.POST)
-        return HttpResponseRedirect('/')
+        if form.is_valid():
+            if request.user.is_authenicated():
+                form.instance.user = request.user
+            form.save()
+            return HttpResponseRedirect('/')
+        else:
+            return render(request, 'blog/submit_music.html', {'form': form})
 
 
 def about(request):
@@ -375,21 +457,6 @@ def add_feed(request):
     else:
         return render(request, 'blog/add_feed.html', {'form': form})
 
-def add_post_test(request, feed_name_slug):
-    try:
-        feed = Feed.objects.get(slug=feed_name_slug)
-    except Feed.DoesNotExist:
-        feed = None
-    form = PostForm()
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save(commit=True)
-            return index(request)
-        else:
-            print(form.errors)
-
-    context_dict = {'form': form, 'feed': feed}
-    return render(request, 'blog/add_post.html', context_dict)
 
 def delete_post(request):
     if request.method == 'POST':
@@ -548,8 +615,8 @@ def post_comment(request, **kwargs):
 
 @login_required
 def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect(reverse('index'))
+    logout(request.user)
+    return HttpResponseRedirect('/')
 
 def get_server_side_cookie(request, cookie, default_val=None):
     val = request.session.get(cookie)

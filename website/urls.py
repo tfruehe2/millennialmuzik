@@ -21,5 +21,5 @@ urlpatterns = [
     url('', include('social.apps.django_app.urls',namespace='social')),
     url('', include('django.contrib.auth.urls', namespace='auth')),
     url(r'^admin/', admin.site.urls),
-    url(r'^accounts/', include('registration.backends.simple.urls')),
+
 ]

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Feed, Post, UserProfile, Comment, Song, Playlist
+from .models import Feed, Post, UserProfile, Comment, Song, Playlist, Suggestion, MusicRecommendation
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, HTML
 from crispy_forms.bootstrap import FormActions, StrictButton
@@ -106,22 +106,28 @@ class CommentForm(ModelForm):
         model = Comment
         fields = ['body',]
 
-class SubmitMusicForm(forms.Form):
-    Artist = forms.CharField(required=True, widget=forms.TextInput(
+class SubmitMusicForm(ModelForm):
+    artist = forms.CharField(required=True, label="Artist", widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': "artist's name..."}
-    ))
-    Song_Name = forms.CharField(required=True, widget=forms.TextInput(
+        ));
+    song_name = forms.CharField(required=True, label="Song Name", widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': "song's name..."}
-    ))
-    url = forms.CharField(required=False, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': "option url to music video..."}
-    ))
+    ));
+    url = forms.CharField(required=False, label="Video Url", widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': "optional url to music video..."}
+    ));
+    class Meta:
+        model = MusicRecommendation
+        fields = ['artist', 'song_name', 'url']
 
 
-class SuggestionsForm(forms.Form):
-    What_Needs_Improvement = forms.CharField(required=True, widget=forms.TextInput(
+class SuggestionsForm(ModelForm):
+    what = forms.CharField(required=True, label="What Needs Improvement?", widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': "what about this website pisses you off..."}
-    ))
-    Suggestions_On_How = forms.CharField(widget=forms.Textarea(
+    ));
+    how = forms.CharField(label="How Should I Improve it?", widget=forms.Textarea(
         attrs={'class':'form-control', 'placeholder':"suggestions or example of website that does it better...", "rows":'4'}
-    ))
+    ));
+    class Meta:
+        model = Suggestion
+        fields = ['what', 'how']

@@ -19,7 +19,7 @@
    $this
       .closest('#title-row')
       .next('#body-row')
-      .remove("#body-block")
+      .find("#body")
       .load($this.attr("data-url"));
  });
 
