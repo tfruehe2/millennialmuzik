@@ -47,6 +47,8 @@ class Post(models.Model):
     title = models.CharField(max_length=200, unique=True)
     description = models.TextField()
     pub_date = models.DateTimeField(auto_now_add=True)
+    #Should Not have been a Through Field
+    #####################################
     comments = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='Comment',
@@ -180,17 +182,22 @@ class PlaylistEntry(OrderedModel):
     class Meta(OrderedModel.Meta):
         ordering = ('playlist','order')
 
-
+#Should Not have been a Through Field
+#####################################
 class Comment(models.Model):
     body = models.TextField()
     pub_date = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    userprofile = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
+    userprofile = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
+    def _get_title(self):
+        return "{}-{}: {}".format(self.userprofile, self.post, self.pub_date)
+
+    title = property(_get_title)
 
     def __str__(self):
-        return "{}-{}: {}".format(self.userprofile, self.post, self.pub_date)
+        return self.title
 
     def upvote_comment(self):
         count = self.upvotes + 1
@@ -199,6 +206,8 @@ class Comment(models.Model):
     def upvote_comment(self):
         count = self.downvotes + 1
         self.downvotes = count
+
+
 
 class Like(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)

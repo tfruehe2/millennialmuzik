@@ -72,15 +72,16 @@
 
      {% endif %}
      </blockquote>
+     {% if post.comments %}
      <ul class="media-list">
-       {% if post.comments %}
+
        {% for comment in post.comments.all %}
        <li class="media">
          <div class="pull-left btn-group-vertical media-object">
-           <a class="btn btn-default borderless upvote-btn">
+           <a class="btn btn-default borderless upvote-btn" data-id="{{ comment.title }}">
              <i class="fa fa-thumbs-o-up fa-lg"></i><strong> {{ comment.upvotes }}</strong>
            </a>
-           <a class="btn btn-default borderless downvote-btn">
+           <a class="btn btn-default borderless downvote-btn" data-id="{{ comment.title }}">
              <i class="fa fa-thumbs-o-down fa-lg"></i><strong> {{ comment.downvotes }}</strong>
            </a>
          </div>
@@ -90,8 +91,16 @@
          </div>
        </li>
        {% endfor %}
-       {% endif %}
+
 
     </ul>
+    {% endif %}
     </div>
   </div>
+
+  <script>
+  $(".upvote-btn").click(function() {
+
+  });
+
+  </script>

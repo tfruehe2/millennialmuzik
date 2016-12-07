@@ -16,7 +16,7 @@
       <div class="panel-body">
 
         {% if playlist.image %}
-          <img src="/media/{{ post.image }}" class="img-rounded" id="img-container" style="width:200px;height:150px" />
+          <img src="/media/{{ playlist.post.image }}" class="img-rounded" id="img-container" style="width:200px;height:150px" />
         {% else %}
           <img src="{% static "blog/public/images/Placeholder.png" %}" class="img-rounded" style="width:150px;height:150px" />
         {% endif %}

@@ -3,6 +3,8 @@ from django.db.models import Count, Q
 import random
 import operator
 import json
+import re
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import DateField
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -62,30 +64,6 @@ class JSONMixin(object):
             to_json.update(errors=errors)
         return json.dumps(to_json)
 
-class AjaxableResponseMixin(object):
-    """
-    Mixin to add AJAX support to a form.
-    Must be used with an object-based FormView (e.g. CreateView)
-    """
-    def form_invalid(self, form):
-        response = super(AjaxableResponseMixin, self).form_invalid(form)
-        if self.request.is_ajax():
-            return JsonResponse(form.errors, status=400)
-        else:
-            return response
-
-    def form_valid(self, form):
-        # We make sure to call the parent's form_valid() method because
-        # it might do some processing (in the case of CreateView, it will
-        # call form.save() for example).
-        response = super(AjaxableResponseMixin, self).form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                'pk': self.object.pk,
-            }
-            return JsonResponse(data)
-        else:
-            return response
 
 
 @login_required
@@ -247,7 +225,10 @@ class MusicByGenre(ListView):
 
     def get_queryset(self):
         if self.kwargs['kw'] != None:
-            tag = Tag.objects.get(name=self.kwargs['kw'].upper())
+            try:
+                tag = Tag.objects.get(name=self.kwargs['kw'].upper())
+            except ObjectDoesNotExist:
+                return Post.objects.filter(is_song=True)
             return tag.post_set.all()
         return Post.objects.filter(is_song=True)
 
@@ -262,8 +243,10 @@ class music_by_genre(ListView):
         return context
 
     def get_queryset(self):
-        #if self.kwargs['kw']:
-        tag = Tag.objects.get(name=self.kwargs['kw'].upper())
+        try:
+            tag = Tag.objects.get(name=self.kwargs['kw'].upper())
+        except ObjectDoesNotExist:
+            return Post.objects.filter(is_song=True)
         return tag.post_set.all()
 
 class popular_music(ListView):
@@ -315,7 +298,7 @@ class TrendingMusic(ListView):
 class Search_Results(ListView):
     template_name = "blog/search_results.html"
     context_object_name = "search_results"
-    paginate_by = 2
+    paginate_by = 12
 
     def get_context_data(self, **kwargs):
         context = super(Search_Results, self).get_context_data(**kwargs)
@@ -324,10 +307,10 @@ class Search_Results(ListView):
         try:
             search_results = paginator.page(page)
         except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
+
             search_results = paginator.page(1)
         except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
+
             search_results = paginator.page(paginator.num_pages)
         if self.request.GET.get('q'):
             context['newurl'] = "/search/?q=" + str(self.request.GET.get('q')) \
@@ -342,6 +325,8 @@ class Search_Results(ListView):
         result = Post.objects.all()
         query = self.request.GET.get('q')
         if query:
+            if bool(re.search(r'^[\s]+$', query)):
+                return result
             query_list = query.split()
             result = result.filter(
                 reduce(operator.and_,
@@ -503,7 +488,7 @@ def register(request):
         user_form = UserProfileForm(data=request.POST)
 
         if user_form.is_valid():
-            from django.contrib.auth.backends import ModelBackend
+
             user = user_form.save()
             user.set_password(user.password)
             user.save()
